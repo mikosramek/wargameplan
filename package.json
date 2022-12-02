@@ -5,18 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "fe": "lerna run --scope=angular-frontend start",
+    "be": "lerna run --scope=warhammergameplan-express start",
+    "all": "lerna run --parallel start"
   },
   "keywords": [],
-  "author": "",
+  "author": "mikosramek",
   "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "mongoose": "^6.7.5",
-    "mongoose-beautiful-unique-validation": "^7.1.1"
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^6.1.0"
   }
 }

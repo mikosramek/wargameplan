@@ -5,6 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const { DB_NAME, DB_USER, DB_PASSWORD } = process.env;
+
 const dbConnection = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@prod.8tbszom.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
 mongoose.connect(dbConnection, {
