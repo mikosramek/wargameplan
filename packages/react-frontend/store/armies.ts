@@ -3,6 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 
 export type Army = {
   name: string;
+  fetched: boolean;
   steps: string[];
 };
 
@@ -18,6 +19,7 @@ interface State {
   armyIds: string[];
   setArmies: (armies: UnParsedArmy[]) => void;
   armies: Armies;
+  armiesFetched: boolean;
   getArmy: (id: string) => Army;
 }
 
@@ -42,7 +44,7 @@ const parseArmies = (armies: UnParsedArmy[]) => {
   armies.forEach((army) => {
     const { id, name, steps } = army;
     ids.push(id);
-    parsedArmies[id] = { name, steps };
+    parsedArmies[id] = { name, steps, fetched: false };
   });
   return { armyIds: ids, armies: parsedArmies };
 };
@@ -52,10 +54,12 @@ export const useArmiesStore = create<State>()(
     persist(
       (set, get) => ({
         armyIds: [],
+        armiesFetched: false,
         setArmies: (armies) =>
           set(
             () => ({
               armyIds: parseArmies(armies).armyIds,
+              armiesFetched: true,
             }),
             false,
             "set/armies"
