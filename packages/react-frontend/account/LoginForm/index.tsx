@@ -1,30 +1,31 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MainButton } from "@components/MainButton";
 import { IS_DEV } from "@utils/config";
 import styles from "./loginForm.module.scss";
 import Router from "next/router";
-import { useApi } from "hooks/useApi";
+import { useApi, ENDPOINTS } from "hooks/useApi";
+import { useAccountStore } from "store/account";
 
 export const LoginForm = () => {
-  const { get } = useApi({ accountId: null, session: null });
+  const { login } = useApi();
+  const logUserIn = useAccountStore((state) => state.login);
   const [email, setEmail] = useState(IS_DEV ? "miko2@mikosramek.ca" : "");
   const [password, setPassword] = useState(IS_DEV ? "password" : "");
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      get("account", { email, password })
+      login({ email, password })
         .then((account) => {
-          console.log(account);
-          // set account
+          if (!(account instanceof Error)) {
+            logUserIn(account.id, account.email, account.approved);
+            Router.push("/armies");
+          }
         })
         .catch(console.error);
     },
-    [get, email, password]
+    [login, email, password]
   );
-
-  // once account is set
-  // Router.push("/armies");
 
   return (
     <form onSubmit={handleSubmit} className={styles.LoginForm}>

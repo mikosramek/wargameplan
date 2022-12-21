@@ -1,17 +1,21 @@
 import Router from "next/router";
 import { useEffect } from "react";
+import { useAccountStore } from "store/account";
 
 export const useUser = ({ redirectTo = "" }) => {
-  const account = {
-    isLoggedIn: false,
-  };
-  useEffect(() => {
-    if (!redirectTo || !account) return;
+  const isLoggedIn = useAccountStore((state) => state.isLoggedIn);
+  const accountId = useAccountStore((state) => state.accountId);
+  const isVerified = useAccountStore((state) => state.isVerified);
+  const session = useAccountStore((state) => state.session);
 
-    if (redirectTo && !account.isLoggedIn) {
+  useEffect(() => {
+    console.log({ isLoggedIn, accountId });
+    if (!redirectTo) return;
+
+    if (redirectTo && !isLoggedIn) {
       Router.replace(redirectTo);
     }
-  }, [account, redirectTo]);
+  }, [isLoggedIn, redirectTo]);
 
-  return { account };
+  return { accountId, isLoggedIn, isVerified, session };
 };

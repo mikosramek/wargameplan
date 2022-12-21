@@ -1,12 +1,20 @@
 const Army = require("./schema");
 
+// _id
+// accountId
+// name
+// steps: []
 class ArmyController {
+  cleanArmy(army) {
+    const { _id: id, name, steps } = army;
+    return { id, name, steps };
+  }
   getAll({ accountId }, callback) {
     Army.find({ accountId })
       .limit(20)
       .exec((err, armies) => {
         if (err) callback(err);
-        else callback(null, armies);
+        else callback(null, armies.map(this.cleanArmy));
       });
   }
   create(armyConfig, callback) {
@@ -19,7 +27,7 @@ class ArmyController {
   getOne(query, callback) {
     Army.findOne(query).exec((err, army) => {
       if (err) callback(err);
-      else callback(null, army);
+      else callback(null, this.cleanArmy(army));
     });
   }
   // delete
