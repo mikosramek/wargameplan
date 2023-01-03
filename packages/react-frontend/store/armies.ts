@@ -4,7 +4,6 @@ import { devtools, persist } from "zustand/middleware";
 export type Army = {
   name: string;
   fetched: boolean;
-  steps: string[];
 };
 
 type Armies = Record<string, Army>;
@@ -12,7 +11,6 @@ type Armies = Record<string, Army>;
 export type UnParsedArmy = {
   id: string;
   name: string;
-  steps: string[];
 };
 
 interface State {
@@ -28,12 +26,10 @@ interface State {
     {
         "id": "6388dbbb74a6cc4991ea1323",
         "name": "testArny",
-        "steps": []
     },
     {
         "id": "63a3244bdbbe967d2dfc3cf7",
         "name": "Kirk",
-        "steps": []
     }
 ]
 */
@@ -42,9 +38,9 @@ const parseArmies = (armies: UnParsedArmy[]) => {
   const ids: string[] = [];
   const parsedArmies: Armies = {};
   armies.forEach((army) => {
-    const { id, name, steps } = army;
+    const { id, name } = army;
     ids.push(id);
-    parsedArmies[id] = { name, steps, fetched: false };
+    parsedArmies[id] = { name, fetched: false };
   });
   return { armyIds: ids, armies: parsedArmies };
 };

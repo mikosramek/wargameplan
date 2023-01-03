@@ -15,6 +15,7 @@ const useArmies = () => {
       handleArmiesFetch();
     }
   }, [isLoggedIn]);
+
   const handleArmiesFetch = async () => {
     console.log("FETCHING ARMIES");
     try {

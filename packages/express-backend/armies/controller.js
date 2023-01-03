@@ -5,9 +5,15 @@ const Army = require("./schema");
 // name
 // steps: []
 class ArmyController {
+  validateOwner({ armyId, accountId }, callback) {
+    Army.exists({ accountId, _id: armyId }, (err, army) => {
+      if (err) callback(false);
+      else callback(!!army);
+    });
+  }
   cleanArmy(army) {
-    const { _id: id, name, steps } = army;
-    return { id, name, steps };
+    const { _id: id, name } = army;
+    return { id, name };
   }
   getAll({ accountId }, callback) {
     Army.find({ accountId })

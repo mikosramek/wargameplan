@@ -31,6 +31,7 @@ export const useApi = () => {
     },
     [accountId]
   );
+
   const getArmies = useCallback(() => {
     const url = getUrl("armies");
     return new Promise<UnParsedArmy[] | Error>((res, rej) => {
@@ -40,6 +41,12 @@ export const useApi = () => {
         .catch(rej);
     });
   }, [getUrl]);
+
+  // "id": "63a36abddb4e21bcf787af0a",
+  //  "name": "Setup",
+  //  "order": 0
+  const getSteps = useCallback((armyId: string) => {}, []);
+
   const login = useCallback(
     ({ email, password }: { email: string; password: string }) => {
       const url = getUrl("account");
