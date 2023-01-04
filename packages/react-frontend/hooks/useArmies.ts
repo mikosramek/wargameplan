@@ -4,8 +4,9 @@ import { useArmiesStore } from "store/armies";
 import { useApi } from "./useApi";
 
 const useArmies = () => {
-  const { getArmies } = useApi();
+  const { getArmies, getArmySteps } = useApi();
   const setArmies = useArmiesStore((state) => state.setArmies);
+  const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
   const armies = useArmiesStore((state) => state.armies);
   const armiesFetched = useArmiesStore((state) => state.armiesFetched);
   const isLoggedIn = useAccountStore((state) => state.isLoggedIn);
@@ -28,9 +29,20 @@ const useArmies = () => {
     }
   };
 
-  const handleArmyFetch = async () => {};
+  const handleArmyFetch = async (id: string) => {
+    console.log("FETCHING SINGULAR ARMY", id);
+    try {
+      const steps = await getArmySteps(id);
+      if (!(steps instanceof Error)) {
+        console.log(steps);
+        updateArmySteps(id, steps);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  return { armies, armiesFetched };
+  return { armies, armiesFetched, handleArmyFetch };
 };
 
 export default useArmies;

@@ -33,7 +33,6 @@ router.post("/create", (req, res) => {
       console.error(err);
       return res.status(500).send(err.message);
     }
-
     return res.status(201).send(newStep);
   });
 });
@@ -41,12 +40,14 @@ router.post("/create", (req, res) => {
 router.post("/:stepId/new-rule", (req, res) => {
   const { stepId } = req.params;
   const { name, text } = req.body;
+  if (!name || !text)
+    return res.status(400).send("Rule name and text required");
+
   StepsController.createRule({ stepId, name, text }, (err, updatedStep) => {
     if (err) {
       console.error(err);
       return res.status(500).send(err.message);
     }
-
     return res.status(201).send(updatedStep);
   });
 });

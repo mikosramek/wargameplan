@@ -2,16 +2,18 @@ import { useCallback } from "react";
 import axios from "axios";
 import { API_BASE } from "@utils/config";
 import { useAccountStore } from "store/account";
-import { UnParsedArmy } from "store/armies";
+import { ArmySteps, UnParsedArmy } from "store/armies";
 
 export const ENDPOINTS = {
   getters: {
     account: "/v1/accounts",
     armies: "/v1/<accountId>/armies",
+    army: "/v1/<accountId>/<armyId>/steps",
   },
   creators: {
     account: "/v1/accounts/create",
     armies: "/v1/<accountId>/armies/create",
+    army: "/v1/<accountId>/<armyId>/steps/<stepId>/new-rule",
   },
 };
 type urlGetterType = keyof typeof ENDPOINTS.getters;
@@ -26,7 +28,7 @@ export const useApi = () => {
       let url = ENDPOINTS.getters[type];
       if (accountId)
         url = `${API_BASE}${url.replace(/<accountId>/gi, accountId)}`;
-      console.log({ url, accountId });
+      // console.log({ url, accountId });
       return url;
     },
     [accountId]
@@ -41,6 +43,19 @@ export const useApi = () => {
         .catch(rej);
     });
   }, [getUrl]);
+
+  const getArmySteps = useCallback(
+    (armyId: string) => {
+      const url = getUrl("army").replace(/<armyId>/gi, armyId);
+      return new Promise<ArmySteps[] | Error>((res, rej) => {
+        axios
+          .get(url)
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [getUrl]
+  );
 
   // "id": "63a36abddb4e21bcf787af0a",
   //  "name": "Setup",
@@ -62,5 +77,5 @@ export const useApi = () => {
     [getUrl]
   );
 
-  return { login, getArmies };
+  return { login, getArmies, getArmySteps };
 };

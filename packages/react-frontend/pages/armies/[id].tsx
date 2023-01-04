@@ -1,3 +1,4 @@
+import StepContainer from "@components/Army/StepContainer";
 import LayoutWrapper from "@components/LayoutWrapper";
 import useArmies from "hooks/useArmies";
 import { useRouter } from "next/router";
@@ -7,29 +8,33 @@ import { useArmiesStore } from "store/armies";
 const ArmyPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { armiesFetched } = useArmies();
+  const { armiesFetched, handleArmyFetch } = useArmies();
 
   const army = useArmiesStore((state) => state.getArmy)(id as string);
 
-  useEffect(() => {
-    if (!army) {
-    }
-  }, []);
+  const armyFetched = !!army && army.fetched;
 
   useEffect(() => {
-    if (!army.fetched) {
+    if (!armyFetched && id && typeof id === "string") {
       console.log("FETCHING SINGULAR ARMY", id);
-      // fetch army steps / everything else involved
+      handleArmyFetch(id);
     }
-  }, []);
+  }, [id]);
 
-  if (!armiesFetched || !army.fetched) {
-    return null;
+  if (!armiesFetched || !armyFetched) {
+    return null; // TODO: loader
   }
+
+  console.log(army);
 
   return (
     <LayoutWrapper>
-      <h1>{army.name}</h1>
+      <>
+        <h1>{army.name}</h1>
+        {army.steps.map((steps) => (
+          <StepContainer key={`step-${steps.id}`} steps={steps} />
+        ))}
+      </>
     </LayoutWrapper>
   );
 };

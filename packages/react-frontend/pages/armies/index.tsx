@@ -16,7 +16,7 @@ const Armies = () => {
       <h1>Your Armies</h1>
       <section>
         {Object.entries(armies).map(([id, army]) => {
-          return <ArmyPreview id={id} army={army} />;
+          return <ArmyPreview id={id} army={army} key={`army-${id}`} />;
         })}
       </section>
     </LayoutWrapper>

@@ -1,10 +1,22 @@
 const Step = require("./schema");
 
+orderSort = (a, b) => {
+  if (a.order > b.order) return 1;
+  else if (a.order < b.order) return -1;
+  return 0;
+};
+cleanRules = (rules) => {
+  return rules.sort(orderSort).map(({ _id, name, text, iconUrl }) => ({
+    id: _id,
+    name,
+    text,
+    iconUrl,
+  }));
+};
 class StepController {
   cleanStep(step) {
-    // console.log({ step });
     const { _id: id, name, order, rules } = step;
-    return { id, name, order, rules };
+    return { id, name, order, rules: cleanRules(rules) };
   }
   getArmySteps({ armyId }, callback) {
     Step.find({ armyId }).exec((err, steps) => {
@@ -25,13 +37,12 @@ class StepController {
     });
   }
   createRule({ stepId, name, text }, callback) {
-    // Post.aggregate([{$match: {postId: 5}}, {$project: {upvotes: {$size: '$upvotes'}}}])
     Step.findById(stepId, (err, step) => {
       if (err) callback(err);
       else {
         const newRuleCount = step.ruleCount + 1;
         const newRule = { name, text, order: newRuleCount };
-        // update ruleCount
+
         step.ruleCount = newRuleCount;
         step.rules.push(newRule);
         step.save((err) => {
@@ -40,7 +51,6 @@ class StepController {
         });
       }
     });
-    // Step.updateOne({ id: stepId }, { $push: { rules:  }})
   }
 }
 
