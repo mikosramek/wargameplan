@@ -29,5 +29,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/v1/accounts", require("./accounts/routes"));
 app.use("/api/v1/:accountId/armies", require("./armies/routes"));
+app.use("/api/v1/:accountId/:armyId/steps", require("./steps/routes"));
 
 app.listen(3000);

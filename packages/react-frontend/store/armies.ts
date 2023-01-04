@@ -3,7 +3,8 @@ import { devtools, persist } from "zustand/middleware";
 
 export type Army = {
   name: string;
-  steps: string[];
+  fetched: boolean;
+  steps: ArmySteps[];
 };
 
 type Armies = Record<string, Army>;
@@ -11,13 +12,27 @@ type Armies = Record<string, Army>;
 export type UnParsedArmy = {
   id: string;
   name: string;
-  steps: string[];
+};
+
+export type ArmySteps = {
+  id: string;
+  name: string;
+  rules: ArmyRule[];
+};
+
+export type ArmyRule = {
+  id: string;
+  name: string;
+  text: string;
+  iconUrl: string;
 };
 
 interface State {
   armyIds: string[];
   setArmies: (armies: UnParsedArmy[]) => void;
+  updateArmySteps: (armyId: string, steps: ArmySteps[]) => void;
   armies: Armies;
+  armiesFetched: boolean;
   getArmy: (id: string) => Army;
 }
 
@@ -26,12 +41,10 @@ interface State {
     {
         "id": "6388dbbb74a6cc4991ea1323",
         "name": "testArny",
-        "steps": []
     },
     {
         "id": "63a3244bdbbe967d2dfc3cf7",
         "name": "Kirk",
-        "steps": []
     }
 ]
 */
@@ -40,32 +53,51 @@ const parseArmies = (armies: UnParsedArmy[]) => {
   const ids: string[] = [];
   const parsedArmies: Armies = {};
   armies.forEach((army) => {
-    const { id, name, steps } = army;
+    const { id, name } = army;
     ids.push(id);
-    parsedArmies[id] = { name, steps };
+    parsedArmies[id] = { name, fetched: false, steps: [] };
   });
   return { armyIds: ids, armies: parsedArmies };
 };
 
 export const useArmiesStore = create<State>()(
   devtools(
-    persist(
-      (set, get) => ({
-        armyIds: [],
-        setArmies: (armies) =>
-          set(
-            () => ({
-              armyIds: parseArmies(armies).armyIds,
-            }),
-            false,
-            "set/armies"
-          ),
-        armies: {},
-        getArmy: (id: string) => get().armies[id],
-      }),
-      {
-        name: "armies-state",
-      }
-    )
+    (set, get) => ({
+      armyIds: [],
+      armiesFetched: false,
+      setArmies: (armies) =>
+        set(
+          () => ({
+            armyIds: parseArmies(armies).armyIds,
+            armies: parseArmies(armies).armies,
+            armiesFetched: true,
+          }),
+          false,
+          "set/armies"
+        ),
+      updateArmySteps: (armyId, steps) =>
+        set(
+          (state: State) => {
+            console.log(state);
+            return {
+              armies: {
+                ...state.armies,
+                [armyId]: {
+                  ...state.armies[armyId],
+                  fetched: true,
+                  steps,
+                },
+              },
+            };
+          },
+          false,
+          "update/army"
+        ),
+      armies: {},
+      getArmy: (id: string) => get().armies[id],
+    }),
+    {
+      name: "armies-state",
+    }
   )
 );
