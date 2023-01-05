@@ -1,4 +1,5 @@
 import StepContainer from "@components/Army/StepContainer";
+import StepsPage from "@components/Army/StepsPage";
 import LayoutWrapper from "@components/LayoutWrapper";
 import useArmies from "hooks/useArmies";
 import { useRouter } from "next/router";
@@ -16,7 +17,6 @@ const ArmyPage = () => {
 
   useEffect(() => {
     if (!armyFetched && id && typeof id === "string") {
-      console.log("FETCHING SINGULAR ARMY", id);
       handleArmyFetch(id);
     }
   }, [id]);
@@ -31,9 +31,10 @@ const ArmyPage = () => {
     <LayoutWrapper>
       <>
         <h1>{army.name}</h1>
-        {army.steps.map((steps) => (
+        <StepsPage steps={army.steps} />
+        {/* {army.steps.map((steps) => (
           <StepContainer key={`step-${steps.id}`} steps={steps} />
-        ))}
+        ))} */}
       </>
     </LayoutWrapper>
   );
