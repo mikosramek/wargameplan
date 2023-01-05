@@ -13,7 +13,7 @@ describe("A user deletes their account", () => {
     });
     account.save().then(() => done());
   });
-  it("their account is removed", (done) => {
+  it("is removed", (done) => {
     AccountController.delete(account._id, (_error, account) => {
       assert(account === null);
       done();
