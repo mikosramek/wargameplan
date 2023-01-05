@@ -17,7 +17,12 @@ class AccountController {
       else callback(null, newAccount);
     });
   }
-  // delete() {}
+  delete(id, callback) {
+    Account.findByIdAndRemove(id).exec((err, account) => {
+      if (err) return callback(err);
+      callback(null, account);
+    });
+  }
   // update
   getOne({ email, password }, callback) {
     Account.findOne({ email }).exec((err, account) => {

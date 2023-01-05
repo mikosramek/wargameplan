@@ -15,7 +15,6 @@ const createHash = (input) => {
 };
 
 const compareHash = (input, hash) => {
-  console.log({ input, hash });
   return new Promise((res, rej) => {
     bcrypt.compare(input, hash, (error, isMatch) => {
       if (error) rej(error);
