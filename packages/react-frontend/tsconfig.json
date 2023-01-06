@@ -17,6 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["components/*"],
+      "@account/*": ["account/*"],
+      "@armies/*": ["armies/*"],
       "@utils/*": ["utils/*"],
       "@store/*": ["store/*"]
     }

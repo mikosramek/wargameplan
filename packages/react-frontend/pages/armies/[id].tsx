@@ -1,5 +1,4 @@
-import StepContainer from "@components/Army/StepContainer";
-import StepsPage from "@components/Army/StepsPage";
+import StepsPage from "@armies/Steps/StepsPage";
 import LayoutWrapper from "@components/LayoutWrapper";
 import useArmies from "hooks/useArmies";
 import { useRouter } from "next/router";
@@ -32,9 +31,6 @@ const ArmyPage = () => {
       <>
         <h1>{army.name}</h1>
         <StepsPage steps={army.steps} />
-        {/* {army.steps.map((steps) => (
-          <StepContainer key={`step-${steps.id}`} steps={steps} />
-        ))} */}
       </>
     </LayoutWrapper>
   );

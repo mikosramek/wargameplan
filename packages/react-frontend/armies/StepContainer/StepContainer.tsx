@@ -1,5 +1,5 @@
 import { ArmySteps } from "@store/armies";
-import RuleContainer from "./RuleContainer";
+import RuleContainer from "@armies/RuleContainer/RuleContainer";
 import * as Styled from "./StepContainer.styled";
 import { useGeneralStore } from "@store/general";
 import useModal from "hooks/useModal";

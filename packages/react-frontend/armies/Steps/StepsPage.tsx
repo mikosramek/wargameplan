@@ -2,7 +2,7 @@ import { ArmySteps } from "@store/armies";
 import { countReset } from "console";
 import useCounter from "hooks/useCounter";
 import { useMemo } from "react";
-import StepContainer from "./StepContainer";
+import StepContainer from "@armies/StepContainer/StepContainer";
 type Props = {
   steps: ArmySteps[];
 };
