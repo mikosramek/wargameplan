@@ -1,18 +1,27 @@
 import { ArmySteps } from "@store/armies";
 import RuleContainer from "./RuleContainer";
+import * as Styled from "./StepContainer.styled";
+import { useGeneralStore } from "@store/general";
+import useModal from "hooks/useModal";
 
 type Props = {
-  steps: ArmySteps;
+  step: ArmySteps;
 };
 
-const StepContainer = ({ steps }: Props) => {
+const StepContainer = ({ step }: Props) => {
+  const editorMode = useGeneralStore((state) => state.editorMode);
+  const { Modal, toggleModal } = useModal("NewRule");
   return (
-    <section>
-      <h2>{steps.name}</h2>
-      {steps.rules.map((rule) => (
-        <RuleContainer key={`rule-${rule.id}`} rule={rule} />
-      ))}
-    </section>
+    <Styled.Wrapper>
+      <Styled.Heading>{step.name}</Styled.Heading>
+      <Styled.InnerWrapper>
+        {step.rules.map((rule) => (
+          <RuleContainer key={`rule-${rule.id}`} rule={rule} />
+        ))}
+        {true && <button onClick={toggleModal}>Add Rule</button>}
+      </Styled.InnerWrapper>
+      {Modal}
+    </Styled.Wrapper>
   );
 };
 
