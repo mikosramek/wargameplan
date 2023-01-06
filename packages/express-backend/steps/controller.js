@@ -1,4 +1,5 @@
 const Step = require("./schema");
+const ArmyController = require("../armies/controller");
 
 orderSort = (a, b) => {
   if (a.order > b.order) return 1;
@@ -47,7 +48,12 @@ class StepController {
         step.rules.push(newRule);
         step.save((err) => {
           if (err) callback(err);
-          else callback(null, step);
+          else {
+            this.getArmySteps({ armyId: step.armyId }, (err, armySteps) => {
+              if (err) callback(err);
+              else callback(null, armySteps);
+            });
+          }
         });
       }
     });

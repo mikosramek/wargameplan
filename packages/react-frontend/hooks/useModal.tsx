@@ -1,28 +1,31 @@
 import { useMemo, useReducer } from "react";
 import NewRuleModal from "@components/Modals/NewRuleModal";
 import ModalWrapper from "@components/Modals/ModalWrapper";
+import { useGeneralStore } from "@store/general";
 
-const ModalType = {
+export const ModalType = {
   NewRule: "NewRule",
 };
 
-const useModal = (modalType: keyof typeof ModalType) => {
-  const [modalState, toggleModal] = useReducer((state) => !state, false);
+const useModal = () => {
+  const currentModal = useGeneralStore((state) => state.currentModal);
+  const closeModal = useGeneralStore((state) => state.closeModal);
+  // const [modalState, toggleModal] = useReducer((state) => !state, false);
   const Modal = useMemo(() => {
-    if (!modalState) return null;
-    switch (modalType) {
+    if (!currentModal) return null;
+    switch (currentModal) {
       case "NewRule":
         return (
-          <ModalWrapper heading="Add a New Rule" closeModal={toggleModal}>
+          <ModalWrapper heading="Add a New Rule" closeModal={closeModal}>
             <NewRuleModal />
           </ModalWrapper>
         );
       default:
         return null;
     }
-  }, [modalType, modalState]);
+  }, [currentModal]);
 
-  return { Modal, toggleModal };
+  return { Modal };
 };
 
 export default useModal;

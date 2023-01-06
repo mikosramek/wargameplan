@@ -4,7 +4,7 @@ import { useArmiesStore } from "store/armies";
 import { useApi } from "./useApi";
 
 const useArmies = () => {
-  const { getArmies, getArmySteps } = useApi();
+  const { getters } = useApi();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
   const armies = useArmiesStore((state) => state.armies);
@@ -20,7 +20,7 @@ const useArmies = () => {
   const handleArmiesFetch = async () => {
     console.log("FETCHING ARMIES");
     try {
-      const armies = await getArmies();
+      const armies = await getters.getArmies();
       if (!(armies instanceof Error)) {
         setArmies(armies);
       }
@@ -32,7 +32,7 @@ const useArmies = () => {
   const handleArmyFetch = async (id: string) => {
     console.log("FETCHING SINGULAR ARMY", id);
     try {
-      const steps = await getArmySteps(id);
+      const steps = await getters.getArmySteps(id);
       if (!(steps instanceof Error)) {
         console.log(steps);
         updateArmySteps(id, steps);

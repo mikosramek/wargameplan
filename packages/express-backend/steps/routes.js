@@ -43,12 +43,12 @@ router.post("/:stepId/new-rule", (req, res) => {
   if (!name || !text)
     return res.status(400).send("Rule name and text required");
 
-  StepsController.createRule({ stepId, name, text }, (err, updatedStep) => {
+  StepsController.createRule({ stepId, name, text }, (err, updatedSteps) => {
     if (err) {
       console.error(err);
       return res.status(500).send(err.message);
     }
-    return res.status(201).send(updatedStep);
+    return res.status(201).send(updatedSteps);
   });
 });
 

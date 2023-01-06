@@ -3,7 +3,7 @@ import { MainButton } from "@components/MainButton";
 import { IS_DEV } from "@utils/config";
 import styles from "./loginForm.module.scss";
 import Router from "next/router";
-import { useApi, ENDPOINTS } from "hooks/useApi";
+import { useApi } from "hooks/useApi";
 import { useAccountStore } from "store/account";
 
 export const LoginForm = () => {

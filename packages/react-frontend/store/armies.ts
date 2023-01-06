@@ -34,6 +34,11 @@ interface State {
   armies: Armies;
   armiesFetched: boolean;
   getArmy: (id: string) => Army;
+  currentArmyId: string | null;
+  setCurrentArmyId: (id: string) => void;
+  currentStepId: string | null;
+  setCurrentStepId: (id: string) => void;
+  clearCurrentArmyId: () => void;
 }
 
 /*
@@ -78,7 +83,6 @@ export const useArmiesStore = create<State>()(
       updateArmySteps: (armyId, steps) =>
         set(
           (state: State) => {
-            console.log(state);
             return {
               armies: {
                 ...state.armies,
@@ -95,6 +99,18 @@ export const useArmiesStore = create<State>()(
         ),
       armies: {},
       getArmy: (id: string) => get().armies[id],
+      currentArmyId: null,
+      setCurrentArmyId: (id: string) =>
+        set(() => ({ currentArmyId: id }), false, "set/armyId"),
+      currentStepId: null,
+      setCurrentStepId: (id: string) =>
+        set(() => ({ currentStepId: id }), false, "set/stepId"),
+      clearCurrentArmyId: () =>
+        set(
+          () => ({ currentStepId: null, currentArmyId: null }),
+          false,
+          "clear/army"
+        ),
     }),
     {
       name: "armies-state",
