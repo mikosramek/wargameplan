@@ -57,6 +57,41 @@ class StepController {
       }
     });
   }
+  deleteRule({ stepId, ruleId }, callback) {
+    Step.findById(stepId, (err, step) => {
+      if (err) callback(err);
+      else {
+        const rules = [...step.rules];
+        // remove rule via ID?
+        const ruleIndex = rules.findIndex(
+          (rule) => rule._id.toString() === ruleId
+        );
+        rules.splice(ruleIndex, 1);
+        // update ruleCount
+        step.ruleCount = rules.length;
+
+        // update rules ordering
+        for (let i = 0; i < rules.length; i += 1) {
+          if (rules[i].order > ruleIndex) {
+            rules[i].order -= 1;
+          }
+        }
+
+        step.rules = rules;
+        // save step
+        step.save((err) => {
+          if (err) callback(err);
+          else {
+            // return this.getArmySteps
+            this.getArmySteps({ armyId: step.armyId }, (err, armySteps) => {
+              if (err) callback(err);
+              else callback(null, armySteps);
+            });
+          }
+        });
+      }
+    });
+  }
 }
 
 module.exports = new StepController();

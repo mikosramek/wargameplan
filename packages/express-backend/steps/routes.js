@@ -52,4 +52,16 @@ router.post("/:stepId/new-rule", (req, res) => {
   });
 });
 
+router.delete("/:stepId/:ruleId", (req, res) => {
+  const { stepId, ruleId } = req.params;
+
+  StepController.deleteRule({ stepId, ruleId }, (err, updatedSteps) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err.message);
+    }
+    return res.status(200).send(updatedSteps);
+  });
+});
+
 module.exports = router;
