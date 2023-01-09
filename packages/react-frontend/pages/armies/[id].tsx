@@ -3,7 +3,9 @@ import LayoutWrapper from "@components/LayoutWrapper";
 import useArmies from "hooks/useArmies";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useArmiesStore } from "store/armies";
+import { useArmiesStore } from "@store/armies";
+
+import * as Styled from "./id.styled";
 
 const ArmyPage = () => {
   const router = useRouter();
@@ -40,7 +42,7 @@ const ArmyPage = () => {
   return (
     <LayoutWrapper>
       <>
-        <h1>{army.name}</h1>
+        <Styled.Heading>{army.name}</Styled.Heading>
         <StepsPage steps={army.steps} />
       </>
     </LayoutWrapper>

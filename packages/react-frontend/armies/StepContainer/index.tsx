@@ -18,7 +18,9 @@ const StepContainer = ({ step }: Props) => {
         {step.rules.map((rule) => (
           <RuleContainer key={`rule-${rule.id}`} rule={rule} />
         ))}
-        {true && <button onClick={() => openModal("NewRule")}>Add Rule</button>}
+        {editorMode && (
+          <button onClick={() => openModal("NewRule")}>Add Rule</button>
+        )}
       </Styled.InnerWrapper>
     </Styled.Wrapper>
   );
