@@ -1,6 +1,5 @@
 import LayoutWrapper from "@components/LayoutWrapper";
-import Head from "next/head";
-import { LoginForm } from "../account/LoginForm";
+import { LoginForm } from "@account/LoginForm";
 
 export default function Home() {
   return (

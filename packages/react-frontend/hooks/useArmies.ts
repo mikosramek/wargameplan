@@ -33,7 +33,7 @@ const useArmies = () => {
     console.log("FETCHING SINGULAR ARMY", id);
     try {
       const steps = await getters.getArmySteps(id);
-      if (!(steps instanceof Error)) {
+      if (steps && !(steps instanceof Error)) {
         console.log(steps);
         updateArmySteps(id, steps);
       }

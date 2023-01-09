@@ -1,7 +1,7 @@
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-interface State {
+export interface State {
   isLoggedIn: boolean;
   accountId: string | null;
   session: string | null;

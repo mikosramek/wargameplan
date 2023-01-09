@@ -9,7 +9,6 @@ export const useUser = ({ redirectTo = "" }) => {
   const session = useAccountStore((state) => state.session);
 
   useEffect(() => {
-    console.log({ isLoggedIn, accountId });
     if (!redirectTo) return;
 
     if (redirectTo && !isLoggedIn) {

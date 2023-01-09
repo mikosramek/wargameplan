@@ -1,13 +1,11 @@
 import LayoutWrapper from "@components/LayoutWrapper";
 import ArmyPreview from "armies/ArmyPreview";
 import useArmies from "hooks/useArmies";
-import { useUser } from "hooks/useUser";
 
 const Armies = () => {
-  const { isLoggedIn } = useUser({ redirectTo: "/" });
   const { armies, armiesFetched } = useArmies();
 
-  if (!isLoggedIn || !armiesFetched) {
+  if (!armiesFetched) {
     return null;
   }
 

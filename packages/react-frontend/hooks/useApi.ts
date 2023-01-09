@@ -54,6 +54,7 @@ export const useApi = () => {
 
   const getArmySteps = useCallback(
     (armyId: string) => {
+      if (!accountId) return null;
       const url = getGetterUrl("army").replace(/<armyId>/gi, armyId);
       return new Promise<ArmySteps[] | Error>((res, rej) => {
         axios
@@ -62,7 +63,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getGetterUrl]
+    [getGetterUrl, accountId]
   );
 
   type postNewRuleProps = {
@@ -73,6 +74,7 @@ export const useApi = () => {
   };
   const postNewRule = useCallback(
     ({ armyId, stepId, name, text }: postNewRuleProps) => {
+      if (!accountId) return null;
       const url = getPosterUrl("rule")
         .replace(/<armyId>/gi, armyId)
         .replace(/<stepId>/gi, stepId);
@@ -83,7 +85,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    []
+    [getPosterUrl, accountId]
   );
 
   const login = useCallback(

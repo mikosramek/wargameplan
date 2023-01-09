@@ -41,19 +41,6 @@ interface State {
   clearCurrentArmyId: () => void;
 }
 
-/*
-[
-    {
-        "id": "6388dbbb74a6cc4991ea1323",
-        "name": "testArny",
-    },
-    {
-        "id": "63a3244bdbbe967d2dfc3cf7",
-        "name": "Kirk",
-    }
-]
-*/
-
 const parseArmies = (armies: UnParsedArmy[]) => {
   const ids: string[] = [];
   const parsedArmies: Armies = {};
