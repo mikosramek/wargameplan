@@ -37,8 +37,6 @@ const ArmyPage = () => {
     return null; // TODO: loader
   }
 
-  console.log(army);
-
   return (
     <LayoutWrapper>
       <>

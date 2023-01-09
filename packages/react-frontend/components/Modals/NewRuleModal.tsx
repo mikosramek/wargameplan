@@ -29,10 +29,7 @@ const NewRuleModal = () => {
           text,
         })
         .then((updatedSteps) => {
-          console.log(updatedSteps);
-          // update step with new thing
-          // close modal
-          if (!(updatedSteps instanceof Error)) {
+          if (updatedSteps && !(updatedSteps instanceof Error)) {
             closeModal();
             updateArmySteps(currentArmyId, updatedSteps);
           }

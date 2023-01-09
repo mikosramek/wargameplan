@@ -1,6 +1,7 @@
 import Router from "next/router";
 import { useEffect } from "react";
 import { useAccountStore, State } from "store/account";
+import { useLog } from "./useLog";
 
 type AuthChecker = {
   route: string;
@@ -35,10 +36,11 @@ const authMap = [
 export const useAuth = () => {
   const account = useAccountStore((state) => state);
   const currentRoute = typeof window !== "undefined" ? Router.asPath : null;
+  const { log } = useLog();
 
   useEffect(() => {
     if (!currentRoute) return;
-    console.log({ currentRoute });
+    log({ currentRoute });
     const checks = authMap.filter(({ route, redirectTo }) => {
       if (redirectTo === currentRoute) return false;
       else if (route === "*" || route === currentRoute) return true;
