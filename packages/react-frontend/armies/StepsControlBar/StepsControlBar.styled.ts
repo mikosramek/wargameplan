@@ -55,15 +55,16 @@ export const ListLabel = styled.label<LabelProps>`
   height: 35px;
   width: 100px;
   border-radius: 35px;
-  ${({ checked }) => css`
-    background: var(${checked ? "--impact" : "--secondary"});
-    ${checked &&
+  background: var(--secondary);
+
+  ${({ checked }) =>
+    checked &&
     css`
+      background: var(--impact);
       ${ToggleLabel} {
         left: calc(100% - 75px);
       }
     `}
-  `}
 `;
 
 export const ListInput = styled.input`
