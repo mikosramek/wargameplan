@@ -26,18 +26,19 @@ export const StepsControlBar = ({
         </Styled.InnerControlWrapper>
         <Styled.InnerControlWrapper>
           <Styled.ListItem>
-            <Styled.ListLabel checked={editorMode} htmlFor="editMode">
-              <Styled.ToggleLabel>
-                {editorMode ? "Edit" : "Play"}
-              </Styled.ToggleLabel>
-            </Styled.ListLabel>
             <Styled.ListInput
               type="checkbox"
               name="editMode"
               id="editMode"
               checked={editorMode}
               onChange={toggleEditorMode}
+              className="visually-hidden"
             />
+            <Styled.ListLabel checked={editorMode} htmlFor="editMode">
+              <Styled.ToggleLabel>
+                {editorMode ? "Edit" : "Play"}
+              </Styled.ToggleLabel>
+            </Styled.ListLabel>
           </Styled.ListItem>
           <Styled.ListItem>
             <Styled.ListButton onClick={addPhase} disabled={!editorMode}>

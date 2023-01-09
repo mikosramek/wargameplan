@@ -68,8 +68,14 @@ export const ListLabel = styled.label<LabelProps>`
 `;
 
 export const ListInput = styled.input`
-  cursor: pointer;
-  display: none;
+  @media (min-width: 860px) {
+    &:focus,
+    &:active {
+      & + label span {
+        border: 1px solid var(--black);
+      }
+    }
+  }
 `;
 
 export const InnerControlWrapper = styled.div`
