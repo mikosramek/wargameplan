@@ -19,7 +19,12 @@ const StepContainer = ({ step }: Props) => {
           <RuleContainer key={`rule-${rule.id}`} rule={rule} />
         ))}
         {editorMode && (
-          <button onClick={() => openModal("NewRule")}>Add Rule</button>
+          <Styled.NewRuleButton
+            aria-label="Opens a modal to add a new rule"
+            onClick={() => openModal("NewRule")}
+          >
+            +
+          </Styled.NewRuleButton>
         )}
       </Styled.InnerWrapper>
     </Styled.Wrapper>

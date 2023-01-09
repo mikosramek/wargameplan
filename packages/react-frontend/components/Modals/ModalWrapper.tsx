@@ -10,7 +10,13 @@ type Props = {
 const ModalWrapper = ({ heading, children, closeModal }: Props) => {
   return (
     <Styled.ModalWrapper>
-      <Styled.CloseButton onClick={closeModal}>x</Styled.CloseButton>
+      <Styled.ModalBackground />
+      <Styled.CloseButton
+        aria-label={`Closes the ${heading} modal.`}
+        onClick={closeModal}
+      >
+        x
+      </Styled.CloseButton>
       <Styled.Modal>
         <Styled.Heading>{heading}</Styled.Heading>
         {children}

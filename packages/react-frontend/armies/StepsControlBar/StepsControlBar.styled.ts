@@ -28,12 +28,12 @@ export const ListButton = styled.button`
 
 export const ToggleLabel = styled.span`
   position: absolute;
-  left: 1px;
-  top: 5%;
+  left: -5px;
+  top: 0;
   bottom: 0;
-  padding: 0 14px;
+  padding: 2px 14px 0;
   border-radius: 35px;
-  height: 90%;
+  height: 100%;
   background: var(--main);
   font-size: 20px;
   display: flex;
@@ -62,7 +62,7 @@ export const ListLabel = styled.label<LabelProps>`
     css`
       background: var(--impact);
       ${ToggleLabel} {
-        left: calc(100% - 75px);
+        left: calc(100% - 70px);
       }
     `}
 `;
