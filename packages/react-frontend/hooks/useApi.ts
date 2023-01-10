@@ -5,22 +5,22 @@ import { useAccountStore } from "store/account";
 import { ArmySteps, UnParsedArmy } from "store/armies";
 
 export const ENDPOINTS = {
-  getters: {
+  get: {
     account: "/v1/accounts",
-    armies: "/v1/<accountId>/armies",
+    armies: "/v1/armies",
     army: "/v1/steps/<armyId>",
   },
-  posters: {
+  post: {
     account: "/v1/accounts/create",
-    armies: "/v1/<accountId>/armies/create",
+    armies: "/v1/armies/create",
     rule: "/v1/rules/create",
   },
-  deleters: {
+  delete: {
     rule: "/v1/rules/remove",
   },
 };
-type urlGetterType = keyof typeof ENDPOINTS.getters;
-type urlPosterType = keyof typeof ENDPOINTS.posters;
+type urlGetterType = keyof typeof ENDPOINTS.get;
+type urlPosterType = keyof typeof ENDPOINTS.post;
 
 type LoginResponse = { id: string; email: string; approved: boolean };
 
@@ -29,7 +29,7 @@ export const useApi = () => {
   //   const session = useAccountStore((state) => state.session);
   const getGetterUrl = useCallback(
     (type: urlGetterType) => {
-      let url = `${API_BASE}${ENDPOINTS.getters[type]}`;
+      let url = `${API_BASE}${ENDPOINTS.get[type]}`;
       if (accountId) url = url.replace(/<accountId>/gi, accountId);
       return url;
     },
@@ -38,7 +38,7 @@ export const useApi = () => {
 
   const getPosterUrl = useCallback(
     (type: urlPosterType) => {
-      let url = `${API_BASE}${ENDPOINTS.posters[type]}`;
+      let url = `${API_BASE}${ENDPOINTS.post[type]}`;
       if (accountId) url = url.replace(/<accountId>/gi, accountId);
       return url;
     },
@@ -77,7 +77,7 @@ export const useApi = () => {
   };
   const postNewRule = useCallback(
     ({ armyId, stepId, name, text }: postNewRuleProps) => {
-      const url = `${API_BASE}${ENDPOINTS.posters.rule}`;
+      const url = `${API_BASE}${ENDPOINTS.post.rule}`;
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
