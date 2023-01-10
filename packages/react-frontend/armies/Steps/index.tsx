@@ -32,7 +32,6 @@ const StepsPage = ({ steps }: Props) => {
       <StepsControlBar
         previousStep={decreaseCounter}
         nextStep={increaseCounter}
-        addPhase={() => null}
       />
       {!!currentStep && <StepContainer step={currentStep} />}
       {Modal}

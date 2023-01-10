@@ -31,7 +31,7 @@ class StepController {
         const newStep = new Step({ name, armyId, order: count });
         newStep.save((err) => {
           if (err) callback(err);
-          else callback(null, newStep);
+          else this.getArmySteps({ armyId: newStep.armyId }, callback);
         });
       }
     });
@@ -48,10 +48,7 @@ class StepController {
         step.save((err) => {
           if (err) callback(err);
           else {
-            this.getArmySteps({ armyId: step.armyId }, (err, armySteps) => {
-              if (err) callback(err);
-              else callback(null, armySteps);
-            });
+            this.getArmySteps({ armyId: step.armyId }, callback);
           }
         });
       }
@@ -83,10 +80,7 @@ class StepController {
           if (err) callback(err);
           else {
             // return this.getArmySteps
-            this.getArmySteps({ armyId: step.armyId }, (err, armySteps) => {
-              if (err) callback(err);
-              else callback(null, armySteps);
-            });
+            this.getArmySteps({ armyId: step.armyId }, callback);
           }
         });
       }

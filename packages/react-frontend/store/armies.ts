@@ -31,6 +31,7 @@ interface State {
   armyIds: string[];
   setArmies: (armies: UnParsedArmy[]) => void;
   updateArmySteps: (armyId: string, steps: ArmySteps[]) => void;
+  updateCurrentArmySteps: (steps: ArmySteps[]) => void;
   armies: Armies;
   armiesFetched: boolean;
   getArmy: (id: string) => Army;
@@ -84,6 +85,20 @@ export const useArmiesStore = create<State>()(
           false,
           "update/army"
         ),
+      updateCurrentArmySteps: (steps) =>
+        set((state: State) => {
+          const currentArmyId = state.currentArmyId;
+          if (!currentArmyId) return state;
+          return {
+            armies: {
+              ...state.armies,
+              [currentArmyId]: {
+                ...state.armies[currentArmyId],
+                steps,
+              },
+            },
+          };
+        }),
       armies: {},
       getArmy: (id: string) => get().armies[id],
       currentArmyId: null,

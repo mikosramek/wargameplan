@@ -21,7 +21,7 @@ router.get("/:armyId", (req, res) => {
 
 router.post("/create", (req, res) => {
   const { name, armyId } = req.body;
-  const { accountId } = req.headers;
+  const { accountid: accountId } = req.headers;
   if (!name) return res.status(400).send("Step name required");
 
   ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {

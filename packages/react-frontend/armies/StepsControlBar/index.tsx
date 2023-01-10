@@ -4,15 +4,11 @@ import * as Styled from "./StepsControlBar.styled";
 type Props = {
   previousStep: () => void;
   nextStep: () => void;
-  addPhase: () => void;
 };
 
-export const StepsControlBar = ({
-  previousStep,
-  nextStep,
-  addPhase,
-}: Props) => {
+export const StepsControlBar = ({ previousStep, nextStep }: Props) => {
   const { editorMode, toggleEditorMode } = useGeneralStore();
+  const openModal = useGeneralStore((state) => state.openModal);
   return (
     <Styled.Nav>
       <Styled.List>
@@ -41,7 +37,10 @@ export const StepsControlBar = ({
             </Styled.ListLabel>
           </Styled.ListItem>
           <Styled.ListItem>
-            <Styled.ListButton onClick={addPhase} disabled={!editorMode}>
+            <Styled.ListButton
+              onClick={() => openModal("NewStep")}
+              disabled={!editorMode}
+            >
               new phase
             </Styled.ListButton>
           </Styled.ListItem>

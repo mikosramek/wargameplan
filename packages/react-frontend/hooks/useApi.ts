@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import axios from "axios";
 import { API_BASE } from "@utils/config";
 import { useAccountStore } from "store/account";
-import { ArmySteps, UnParsedArmy } from "store/armies";
+import { ArmySteps, UnParsedArmy, useArmiesStore } from "store/armies";
 
 export const ENDPOINTS = {
   get: {
@@ -13,6 +13,7 @@ export const ENDPOINTS = {
   post: {
     account: "/v1/accounts/create",
     armies: "/v1/armies/create",
+    step: "/v1/steps/create",
     rule: "/v1/rules/create",
   },
   delete: {
@@ -27,6 +28,12 @@ type LoginResponse = { id: string; email: string; approved: boolean };
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
   //   const session = useAccountStore((state) => state.session);
+  const { currentArmyId, currentStepId } = useArmiesStore((state) => ({
+    currentArmyId: state.currentArmyId,
+    currentStepId: state.currentStepId,
+  }));
+
+  const headers = { accountId };
 
   const getGetUrl = useCallback((type: urlGetterType) => {
     return `${API_BASE}${ENDPOINTS.get[type]}`;
@@ -40,7 +47,7 @@ export const useApi = () => {
     const url = getGetUrl("armies");
     return new Promise<UnParsedArmy[] | Error>((res, rej) => {
       axios
-        .get(url, { headers: { accountId } })
+        .get(url, { headers })
         .then(({ data }) => res(data))
         .catch(rej);
     });
@@ -52,12 +59,29 @@ export const useApi = () => {
       const url = getGetUrl("army").replace(/<armyId>/gi, armyId);
       return new Promise<ArmySteps[] | Error>((res, rej) => {
         axios
-          .get(url, { headers: { accountId } })
+          .get(url, { headers })
           .then(({ data }) => res(data))
           .catch(rej);
       });
     },
     [getGetUrl, accountId]
+  );
+
+  type postNewStepProps = {
+    stepName: string;
+  };
+  const postNewStep = useCallback(
+    ({ stepName }: postNewStepProps) => {
+      const url = getPostUrl("step");
+      return new Promise<ArmySteps[] | Error | null>((res, rej) => {
+        if (!accountId) return null;
+        axios
+          .post(url, { name: stepName, armyId: currentArmyId }, { headers })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [getPostUrl, accountId, currentArmyId]
   );
 
   type postNewRuleProps = {
@@ -72,7 +96,7 @@ export const useApi = () => {
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
-          .post(url, { name, text, armyId, stepId }, { headers: { accountId } })
+          .post(url, { name, text, armyId, stepId }, { headers })
           .then(({ data }) => res(data))
           .catch(rej);
       });
@@ -98,6 +122,6 @@ export const useApi = () => {
   return {
     login,
     getters: { getArmies, getArmySteps },
-    posters: { postNewRule },
+    posters: { postNewStep, postNewRule },
   };
 };
