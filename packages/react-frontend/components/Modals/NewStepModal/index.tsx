@@ -11,43 +11,28 @@ const baseInputs = {
 } satisfies BaseInputs;
 
 export const NewStepModal = () => {
-  const {
-    inputs: i,
-    handleInputChange: hic,
-  }: {
-    inputs: BaseInputs;
-    handleInputChange: (stepName: string, value: string) => void;
-  } = useInput({ baseInputs });
-
-  const [inputs, setInputs] = useState(baseInputs);
-
-  const handleInputChange = (
-    inputName: keyof typeof baseInputs,
-    value: string
-  ) => {
-    setInputs({
-      ...inputs,
-      [inputName]: {
-        label: inputs[inputName].label,
-        val: value,
-      },
-    });
-  };
+  const { inputs, handleInputChange } = useInput({ baseInputs });
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log(inputs);
-      console.log(i.step);
+      const form = inputs as typeof baseInputs;
+      console.log(form.stepName.val);
     },
-    [i]
+    [inputs]
   );
 
   return (
     <Styled.Form onSubmit={handleSubmit}>
-      {Object.entries(i).map(([name, { val, label }]) => {
+      {Object.entries(inputs).map(([name, { val, label }], index) => {
         return (
-          <Input inputName={name} label={label} value={val} onChange={hic} />
+          <Input
+            key={`${name}-index`}
+            inputName={name}
+            label={label}
+            value={val}
+            onChange={handleInputChange}
+          />
         );
       })}
       <Styled.Button>Submit</Styled.Button>

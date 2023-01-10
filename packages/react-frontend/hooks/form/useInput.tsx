@@ -1,4 +1,4 @@
-import { useState, HTMLInputTypeAttribute, useMemo } from "react";
+import { useState } from "react";
 
 export type BaseInputs = Record<
   string,
@@ -21,7 +21,6 @@ export const useInput = ({ baseInputs }: Props) => {
     inputName: keyof typeof baseInputs,
     value: string
   ) => {
-    console.log({ value });
     setInputs({
       ...inputs,
       [inputName]: {
