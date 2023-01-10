@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
 import { useApi } from "./useApi";
+import { useLog } from "./useLog";
 
 const useArmies = () => {
   const { getters } = useApi();
+  const { log } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
   const armies = useArmiesStore((state) => state.armies);
@@ -18,7 +20,7 @@ const useArmies = () => {
   }, [isLoggedIn]);
 
   const handleArmiesFetch = async () => {
-    console.log("FETCHING ARMIES");
+    log("FETCHING ARMIES");
     try {
       const armies = await getters.getArmies();
       if (!(armies instanceof Error)) {
@@ -30,11 +32,11 @@ const useArmies = () => {
   };
 
   const handleArmyFetch = async (id: string) => {
-    console.log("FETCHING SINGULAR ARMY", id);
+    log("FETCHING SINGULAR ARMY", id);
     try {
       const steps = await getters.getArmySteps(id);
       if (steps && !(steps instanceof Error)) {
-        console.log(steps);
+        log(steps);
         updateArmySteps(id, steps);
       }
     } catch (error) {

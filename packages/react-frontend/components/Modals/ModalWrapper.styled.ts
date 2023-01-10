@@ -6,8 +6,16 @@ export const ModalWrapper = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: #000a;
   z-index: 10;
+`;
+
+export const ModalBackground = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #000a;
 `;
 
 export const Modal = styled.div`
@@ -17,6 +25,8 @@ export const Modal = styled.div`
   transform: translate(-50%, -50%);
   background-color: var(--white);
   width: 75%;
+  border-radius: 15px;
+  overflow: hidden;
 `;
 
 export const CloseButton = styled.button`

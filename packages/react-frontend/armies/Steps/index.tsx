@@ -1,7 +1,8 @@
 import { ArmySteps, useArmiesStore } from "@store/armies";
 import useCounter from "hooks/useCounter";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import StepContainer from "@armies/StepContainer";
+import { StepsControlBar } from "@armies/StepsControlBar";
 import useModal from "hooks/useModal";
 type Props = {
   steps: ArmySteps[];
@@ -17,7 +18,6 @@ const StepsPage = ({ steps }: Props) => {
   });
 
   useEffect(() => {
-    console.log("counter updated");
     const step = steps[counter];
     if (!!step) {
       setCurrentStep(steps[counter]);
@@ -29,8 +29,11 @@ const StepsPage = ({ steps }: Props) => {
 
   return (
     <>
-      <button onClick={decreaseCounter}>backwards</button>
-      <button onClick={increaseCounter}>forwards</button>
+      <StepsControlBar
+        previousStep={decreaseCounter}
+        nextStep={increaseCounter}
+        addPhase={() => null}
+      />
       {!!currentStep && <StepContainer step={currentStep} />}
       {Modal}
     </>
