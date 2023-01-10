@@ -8,7 +8,7 @@ export const ENDPOINTS = {
   getters: {
     account: "/v1/accounts",
     armies: "/v1/<accountId>/armies",
-    army: "/v1/<accountId>/<armyId>/steps",
+    army: "/v1/steps/<armyId>",
   },
   posters: {
     account: "/v1/accounts/create",
@@ -49,7 +49,7 @@ export const useApi = () => {
     const url = getGetterUrl("armies");
     return new Promise<UnParsedArmy[] | Error>((res, rej) => {
       axios
-        .get(url)
+        .get(url, { headers: { accountId } })
         .then(({ data }) => res(data))
         .catch(rej);
     });
@@ -61,7 +61,7 @@ export const useApi = () => {
       const url = getGetterUrl("army").replace(/<armyId>/gi, armyId);
       return new Promise<ArmySteps[] | Error>((res, rej) => {
         axios
-          .get(url)
+          .get(url, { headers: { accountId } })
           .then(({ data }) => res(data))
           .catch(rej);
       });
@@ -81,7 +81,7 @@ export const useApi = () => {
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
-          .post(url, { name, text, accountId, armyId, stepId })
+          .post(url, { name, text, armyId, stepId }, { headers: { accountId } })
           .then(({ data }) => res(data))
           .catch(rej);
       });

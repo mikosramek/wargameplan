@@ -4,7 +4,8 @@ const StepsController = require("./controller");
 const ArmyController = require("../armies/controller");
 
 router.use("/", (req, res, next) => {
-  const { accountId, armyId } = req.body;
+  const { armyId } = req.body;
+  const { accountid: accountId } = req.headers;
   ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
     if (isOwner) {
       next();
