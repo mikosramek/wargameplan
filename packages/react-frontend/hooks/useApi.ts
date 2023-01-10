@@ -13,7 +13,10 @@ export const ENDPOINTS = {
   posters: {
     account: "/v1/accounts/create",
     armies: "/v1/<accountId>/armies/create",
-    rule: "/v1/<accountId>/<armyId>/steps/<stepId>/new-rule",
+    rule: "/v1/rules/create",
+  },
+  deleters: {
+    rule: "/v1/rules/remove",
   },
 };
 type urlGetterType = keyof typeof ENDPOINTS.getters;
@@ -74,13 +77,11 @@ export const useApi = () => {
   };
   const postNewRule = useCallback(
     ({ armyId, stepId, name, text }: postNewRuleProps) => {
-      const url = getPosterUrl("rule")
-        .replace(/<armyId>/gi, armyId)
-        .replace(/<stepId>/gi, stepId);
+      const url = `${API_BASE}${ENDPOINTS.posters.rule}`;
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
-          .post(url, { name, text })
+          .post(url, { name, text, accountId, armyId, stepId })
           .then(({ data }) => res(data))
           .catch(rej);
       });

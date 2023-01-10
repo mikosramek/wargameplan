@@ -17,7 +17,7 @@ class ArmyController {
   }
   getAll({ accountId }, callback) {
     Army.find({ accountId })
-      .limit(20)
+      .limit(20) // TODO - paginate?
       .exec((err, armies) => {
         if (err) callback(err);
         else callback(null, armies.map(this.cleanArmy));
