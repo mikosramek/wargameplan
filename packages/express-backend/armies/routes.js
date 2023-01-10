@@ -3,7 +3,7 @@ const router = express.Router({ mergeParams: true });
 const ArmyController = require("./controller");
 
 router.get("/", (req, res) => {
-  const { accountId } = req.params;
+  const { accountid: accountId } = req.headers;
   ArmyController.getAll({ accountId }, (err, armies) => {
     if (err) return res.status(400).send(err.message);
     else return res.status(200).send(armies);
@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
-  const { accountId } = req.params;
+  const { accountid: accountId } = req.headers;
   const { name } = req.body;
   if (!name) return res.status(400).send("Army name required");
 
@@ -27,7 +27,8 @@ router.post("/create", (req, res) => {
 
 // specific army
 router.get("/:armyId", (req, res) => {
-  const { accountId, armyId } = req.params;
+  const { accountid: accountId } = req.headers;
+  const { armyId } = req.params;
   ArmyController.getOne({ accountId, armyId }, (err, army) => {
     if (err) {
       return res.status(400).send(err.message);
