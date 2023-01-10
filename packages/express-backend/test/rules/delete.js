@@ -62,23 +62,21 @@ describe("Rules - Delete", () => {
       );
     });
     it("removes the first", (done) => {
-      StepController.deleteRule(
-        { stepId: step._id, ruleId: rule.id },
-        (_err, updatedSteps) => {
-          assert(updatedSteps[0].rules.length === 1);
-          assert(updatedSteps[0].rules[0].id.toString() !== rule.id.toString());
-          done();
-        }
-      );
-    });
-    it("properly re-orders the second rule to be the first", (done) => {
-      StepController.getArmySteps({ armyId: army._id }, (err, steps) => {
-        Step.findById(steps[0].id).exec((err, step) => {
-          const rule = step.rules[0];
-          assert(rule.order === 1);
-          assert(rule._id.toString() === rule2.id.toString());
+      StepController.deleteRule({ stepId: step._id, ruleId: rule.id }, () => {
+        Step.findById(step._id).exec((err, step) => {
+          const newFirstRule = step.rules[0];
+          assert(step.rules.length === step.ruleCount);
+          assert(newFirstRule.id.toString() !== rule.id.toString());
           done();
         });
+      });
+    });
+    it("properly re-orders the second rule to be the first", (done) => {
+      Step.findById(step._id).exec((err, step) => {
+        const rule = step.rules[0];
+        assert(rule.order === 1);
+        assert(rule._id.toString() === rule2.id.toString());
+        done();
       });
     });
   });
