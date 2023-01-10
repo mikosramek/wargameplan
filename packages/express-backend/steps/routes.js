@@ -6,7 +6,6 @@ const ArmyController = require("../armies/controller");
 router.use("/", (req, res, next) => {
   const { accountId, armyId } = req.params;
   ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
-    console.log({ isOwner });
     if (isOwner) {
       next();
     } else {

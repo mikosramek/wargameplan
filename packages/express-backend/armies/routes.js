@@ -28,7 +28,6 @@ router.post("/create", (req, res) => {
 // specific army
 router.get("/:armyId", (req, res) => {
   const { accountId, armyId } = req.params;
-  console.log({ accountId, armyId });
   ArmyController.getOne({ accountId, armyId }, (err, army) => {
     if (err) {
       return res.status(400).send(err.message);

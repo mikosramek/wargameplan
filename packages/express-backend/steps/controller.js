@@ -64,7 +64,7 @@ class StepController {
         const rules = [...step.rules];
         // remove rule via ID?
         const ruleIndex = rules.findIndex(
-          (rule) => rule._id.toString() === ruleId
+          (rule) => rule._id.toString() === ruleId.toString()
         );
         rules.splice(ruleIndex, 1);
         // update ruleCount
