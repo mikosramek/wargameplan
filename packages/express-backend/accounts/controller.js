@@ -2,14 +2,6 @@ const Account = require("./schema");
 const { compareHash } = require("../utils/hash");
 
 class AccountController {
-  getAll(callback) {
-    Account.find()
-      .limit(20)
-      .exec((err, accounts) => {
-        if (err) callback(err);
-        else callback(null, accounts);
-      });
-  }
   create(account, callback) {
     const newAccount = new Account(account);
     newAccount.save((err) => {
