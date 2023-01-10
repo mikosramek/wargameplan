@@ -27,38 +27,29 @@ type LoginResponse = { id: string; email: string; approved: boolean };
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
   //   const session = useAccountStore((state) => state.session);
-  const getGetterUrl = useCallback(
-    (type: urlGetterType) => {
-      let url = `${API_BASE}${ENDPOINTS.get[type]}`;
-      if (accountId) url = url.replace(/<accountId>/gi, accountId);
-      return url;
-    },
-    [accountId]
-  );
 
-  const getPosterUrl = useCallback(
-    (type: urlPosterType) => {
-      let url = `${API_BASE}${ENDPOINTS.post[type]}`;
-      if (accountId) url = url.replace(/<accountId>/gi, accountId);
-      return url;
-    },
-    [accountId]
-  );
+  const getGetUrl = useCallback((type: urlGetterType) => {
+    return `${API_BASE}${ENDPOINTS.get[type]}`;
+  }, []);
+
+  const getPostUrl = useCallback((type: urlPosterType) => {
+    return `${API_BASE}${ENDPOINTS.post[type]}`;
+  }, []);
 
   const getArmies = useCallback(() => {
-    const url = getGetterUrl("armies");
+    const url = getGetUrl("armies");
     return new Promise<UnParsedArmy[] | Error>((res, rej) => {
       axios
         .get(url, { headers: { accountId } })
         .then(({ data }) => res(data))
         .catch(rej);
     });
-  }, [getGetterUrl]);
+  }, [getGetUrl]);
 
   const getArmySteps = useCallback(
     (armyId: string) => {
       if (!accountId) return null;
-      const url = getGetterUrl("army").replace(/<armyId>/gi, armyId);
+      const url = getGetUrl("army").replace(/<armyId>/gi, armyId);
       return new Promise<ArmySteps[] | Error>((res, rej) => {
         axios
           .get(url, { headers: { accountId } })
@@ -66,7 +57,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getGetterUrl, accountId]
+    [getGetUrl, accountId]
   );
 
   type postNewRuleProps = {
@@ -77,7 +68,7 @@ export const useApi = () => {
   };
   const postNewRule = useCallback(
     ({ armyId, stepId, name, text }: postNewRuleProps) => {
-      const url = `${API_BASE}${ENDPOINTS.post.rule}`;
+      const url = getPostUrl("rule");
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
@@ -86,12 +77,12 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPosterUrl, accountId]
+    [getPostUrl, accountId]
   );
 
   const login = useCallback(
     ({ email, password }: { email: string; password: string }) => {
-      const url = getGetterUrl("account");
+      const url = getGetUrl("account");
       return new Promise<LoginResponse | Error>((res, rej) => {
         axios
           .get(url, { params: { email, password }, headers: {} })
@@ -101,7 +92,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getGetterUrl]
+    [getGetUrl]
   );
 
   return {
