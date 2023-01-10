@@ -4,7 +4,7 @@ import { useApi } from "hooks/useApi";
 import { useCallback, useState } from "react";
 import * as Styled from "./NewRuleModal.styled";
 
-const NewRuleModal = () => {
+export const NewRuleModal = () => {
   const { currentArmyId, currentStepId, updateArmySteps } = useArmiesStore(
     (state) => ({
       currentArmyId: state.currentArmyId,
@@ -59,5 +59,3 @@ const NewRuleModal = () => {
     </Styled.Form>
   );
 };
-
-export default NewRuleModal;

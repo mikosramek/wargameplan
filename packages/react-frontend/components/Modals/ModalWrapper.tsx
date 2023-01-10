@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
+import { useGeneralStore } from "@store/general";
 import * as Styled from "./ModalWrapper.styled";
 
 type Props = {
   heading: string;
   children: ReactNode;
-  closeModal: () => void;
 };
 
-const ModalWrapper = ({ heading, children, closeModal }: Props) => {
+const ModalWrapper = ({ heading, children }: Props) => {
+  const closeModal = useGeneralStore((state) => state.closeModal);
+
   return (
     <Styled.ModalWrapper>
       <Styled.ModalBackground />
