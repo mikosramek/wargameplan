@@ -19,7 +19,7 @@ db.on("error", (e) => {
 });
 
 db.on("open", () => {
-  console.log("connected");
+  console.log("connected to database");
 });
 
 const app = express();

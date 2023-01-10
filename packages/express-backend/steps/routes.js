@@ -6,7 +6,6 @@ const ArmyController = require("../armies/controller");
 router.use("/", (req, res, next) => {
   const { accountId, armyId } = req.params;
   ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
-    console.log({ isOwner });
     if (isOwner) {
       next();
     } else {
@@ -49,6 +48,18 @@ router.post("/:stepId/new-rule", (req, res) => {
       return res.status(500).send(err.message);
     }
     return res.status(201).send(updatedSteps);
+  });
+});
+
+router.delete("/:stepId/:ruleId", (req, res) => {
+  const { stepId, ruleId } = req.params;
+
+  StepController.deleteRule({ stepId, ruleId }, (err, updatedSteps) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err.message);
+    }
+    return res.status(200).send(updatedSteps);
   });
 });
 
