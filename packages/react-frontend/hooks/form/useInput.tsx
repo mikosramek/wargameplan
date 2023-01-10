@@ -5,6 +5,9 @@ export type BaseInputs = Record<
   {
     val: string;
     label: string;
+    validate: (val: string) => boolean;
+    errorString: string;
+    error?: string;
   }
 >;
 
@@ -24,11 +27,25 @@ export const useInput = ({ baseInputs }: Props) => {
     setInputs({
       ...inputs,
       [inputName]: {
-        label: inputs[inputName].label,
+        ...inputs[inputName],
         val: value,
       },
     });
   };
 
-  return { inputs, handleInputChange };
+  const validateInputs = () => {
+    const inputCopy = { ...inputs };
+    let isFormValid = true;
+    for (const inputObject of Object.values(inputCopy)) {
+      const isInputValid = inputObject.validate(inputObject.val);
+      inputObject.error = !isInputValid ? inputObject.errorString : undefined;
+      if (!isInputValid) {
+        isFormValid = false;
+      }
+    }
+    setInputs(inputCopy);
+    return isFormValid;
+  };
+
+  return { inputs, handleInputChange, validateInputs };
 };

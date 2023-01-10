@@ -8,6 +8,7 @@ type Props = {
   value: string;
   // stateHandler: ReturnType<typeof useState>;
   onChange: (name: any, input: string) => void;
+  errorMessage?: string;
 };
 
 export const Input = ({
@@ -16,10 +17,16 @@ export const Input = ({
   type = "text",
   value,
   onChange,
+  errorMessage,
 }: Props) => {
   return (
     <>
       <Styled.Label htmlFor={inputName}>{label}:</Styled.Label>
+      {!!errorMessage && (
+        <Styled.ErrorLabel htmlFor={inputName}>
+          {errorMessage}
+        </Styled.ErrorLabel>
+      )}
       <Styled.InputBase
         type={type}
         id={inputName}
