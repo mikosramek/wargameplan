@@ -1,10 +1,12 @@
 import { useArmiesStore } from "@store/armies";
 import { useGeneralStore } from "@store/general";
 import { useApi } from "hooks/useApi";
+import { useLog } from "hooks/useLog";
 import { useCallback, useState } from "react";
 import * as Styled from "./NewRuleModal.styled";
 
 export const NewRuleModal = () => {
+  const { error } = useLog();
   const { currentArmyId, currentStepId, updateArmySteps } = useArmiesStore(
     (state) => ({
       currentArmyId: state.currentArmyId,
@@ -34,7 +36,7 @@ export const NewRuleModal = () => {
             updateArmySteps(currentArmyId, updatedSteps);
           }
         })
-        .catch(console.error);
+        .catch(error);
     },
     [name, text, posters]
   );

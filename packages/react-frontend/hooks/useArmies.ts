@@ -6,7 +6,7 @@ import { useLog } from "./useLog";
 
 const useArmies = () => {
   const { getters } = useApi();
-  const { log } = useLog();
+  const { log, error } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
   const armies = useArmiesStore((state) => state.armies);
@@ -27,7 +27,7 @@ const useArmies = () => {
         setArmies(armies);
       }
     } catch (e) {
-      console.error(e);
+      error(e);
     }
   };
 
@@ -39,8 +39,8 @@ const useArmies = () => {
         log(steps);
         updateArmySteps(id, steps);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      error(e);
     }
   };
 

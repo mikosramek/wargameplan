@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import axios from "axios";
 import { API_BASE } from "@utils/config";
 import { useAccountStore } from "store/account";
-import { ArmySteps, UnParsedArmy } from "store/armies";
+import { ArmySteps, UnParsedArmy, useArmiesStore } from "store/armies";
 
 export const ENDPOINTS = {
   get: {
@@ -28,6 +28,10 @@ type LoginResponse = { id: string; email: string; approved: boolean };
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
   //   const session = useAccountStore((state) => state.session);
+  const { currentArmyId, currentStepId } = useArmiesStore((state) => ({
+    currentArmyId: state.currentArmyId,
+    currentStepId: state.currentStepId,
+  }));
 
   const headers = { accountId };
 
@@ -64,21 +68,20 @@ export const useApi = () => {
   );
 
   type postNewStepProps = {
-    armyId: string;
-    name: string;
+    stepName: string;
   };
   const postNewStep = useCallback(
-    ({ armyId, name }: postNewStepProps) => {
+    ({ stepName }: postNewStepProps) => {
       const url = getPostUrl("step");
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
-          .post(url, { name, armyId }, { headers })
+          .post(url, { name: stepName, armyId: currentArmyId }, { headers })
           .then(({ data }) => res(data))
           .catch(rej);
       });
     },
-    [getPostUrl, accountId]
+    [getPostUrl, accountId, currentArmyId]
   );
 
   type postNewRuleProps = {

@@ -2,6 +2,10 @@ import { useInput, BaseInputs } from "hooks/form/useInput";
 import { Input } from "@components/Form/Input";
 import { useCallback } from "react";
 import * as Styled from "./NewStepModal.styled";
+import { useApi } from "hooks/useApi";
+import { useGeneralStore } from "@store/general";
+import { useArmiesStore } from "@store/armies";
+import { useLog } from "hooks/useLog";
 
 const baseInputs = {
   stepName: {
@@ -13,6 +17,12 @@ const baseInputs = {
 } satisfies BaseInputs;
 
 export const NewStepModal = () => {
+  const { posters } = useApi();
+  const { error } = useLog();
+  const closeModal = useGeneralStore((state) => state.closeModal);
+  const updateCurrentArmySteps = useArmiesStore(
+    (state) => state.updateCurrentArmySteps
+  );
   const { inputs, handleInputChange, validateInputs } = useInput({
     baseInputs,
   });
@@ -23,6 +33,16 @@ export const NewStepModal = () => {
       const form = inputs as typeof baseInputs;
       const isFormValid = validateInputs();
       if (!isFormValid) return;
+
+      posters
+        .postNewStep({ stepName: form.stepName.val })
+        .then((updatedSteps) => {
+          if (updatedSteps && !(updatedSteps instanceof Error)) {
+            closeModal();
+            updateCurrentArmySteps(updatedSteps);
+          }
+        })
+        .catch(error);
     },
     [inputs]
   );

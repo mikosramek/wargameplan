@@ -31,7 +31,7 @@ class StepController {
         const newStep = new Step({ name, armyId, order: count });
         newStep.save((err) => {
           if (err) callback(err);
-          else this.getArmySteps({ armyId: step.armyId }, callback);
+          else this.getArmySteps({ armyId: newStep.armyId }, callback);
         });
       }
     });

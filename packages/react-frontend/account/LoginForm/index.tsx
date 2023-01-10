@@ -5,9 +5,11 @@ import styles from "./loginForm.module.scss";
 import Router from "next/router";
 import { useApi } from "hooks/useApi";
 import { useAccountStore } from "store/account";
+import { useLog } from "hooks/useLog";
 
 export const LoginForm = () => {
   const { login } = useApi();
+  const { error } = useLog();
   const logUserIn = useAccountStore((state) => state.login);
   const [email, setEmail] = useState(IS_DEV ? "miko2@mikosramek.ca" : "");
   const [password, setPassword] = useState(IS_DEV ? "password" : "");
@@ -22,7 +24,7 @@ export const LoginForm = () => {
             Router.push("/armies");
           }
         })
-        .catch(console.error);
+        .catch(error);
     },
     [login, email, password]
   );
