@@ -1,62 +1,78 @@
+import { useInput, BaseInputs } from "hooks/form/useInput";
 import { useArmiesStore } from "@store/armies";
 import { useGeneralStore } from "@store/general";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
 import { useCallback, useState } from "react";
 import * as Styled from "./NewRuleModal.styled";
+import { Input } from "@components/Form/Input";
+
+const baseInputs = {
+  ruleName: {
+    val: "",
+    label: "Rule Name",
+    errorString: "A rule name is required",
+    validate: (val) => !!val,
+  },
+  ruleText: {
+    val: "",
+    label: "Rule Text",
+    errorString: "Rule text is required",
+    validate: (val) => !!val,
+    specialType: "textarea",
+  },
+} satisfies BaseInputs;
 
 export const NewRuleModal = () => {
   const { error } = useLog();
-  const { currentArmyId, currentStepId, updateArmySteps } = useArmiesStore(
-    (state) => ({
-      currentArmyId: state.currentArmyId,
-      currentStepId: state.currentStepId,
-      updateArmySteps: state.updateArmySteps,
-    })
+  const { posters } = useApi();
+  const updateCurrentArmySteps = useArmiesStore(
+    (state) => state.updateCurrentArmySteps
   );
   const closeModal = useGeneralStore((state) => state.closeModal);
-  const [name, setName] = useState("");
-  const [text, setText] = useState("");
-  const { posters } = useApi();
+
+  const { inputs, handleInputChange, validateInputs } = useInput({
+    baseInputs,
+  });
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!currentArmyId || !currentStepId) return;
+      const isFormValid = validateInputs();
+      if (!isFormValid) return;
+      const form = inputs as typeof baseInputs;
       posters
         .postNewRule({
-          armyId: currentArmyId,
-          stepId: currentStepId,
-          name,
-          text,
+          name: form.ruleName.val,
+          text: form.ruleText.val,
         })
         .then((updatedSteps) => {
           if (updatedSteps && !(updatedSteps instanceof Error)) {
             closeModal();
-            updateArmySteps(currentArmyId, updatedSteps);
+            updateCurrentArmySteps(updatedSteps);
           }
         })
         .catch(error);
     },
-    [name, text, posters]
+    [inputs, posters]
   );
   return (
     <Styled.Form onSubmit={handleSubmit}>
-      <Styled.Label htmlFor="name">Rule Name:</Styled.Label>
-      <Styled.Input
-        type="text"
-        id="name"
-        name="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <Styled.Label htmlFor="text">Rule Text:</Styled.Label>
-      <Styled.TextArea
-        name="text"
-        id="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      ></Styled.TextArea>
+      {Object.entries(inputs).map(
+        ([name, { val, label, error = "", specialType }], index) => {
+          return (
+            <Input
+              key={`${name}-${index}`}
+              inputName={name}
+              label={label}
+              value={val}
+              onChange={handleInputChange}
+              errorMessage={error}
+              type={specialType}
+            />
+          );
+        }
+      )}
       <Styled.Button type="submit">Submit</Styled.Button>
     </Styled.Form>
   );

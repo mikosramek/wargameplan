@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { cloneDeep } from "lodash";
 
 export type BaseInputs = Record<
   string,
@@ -8,6 +9,7 @@ export type BaseInputs = Record<
     validate: (val: string) => boolean;
     errorString: string;
     error?: string;
+    specialType?: "textarea";
   }
 >;
 
@@ -18,7 +20,7 @@ type Props = {
 export type handleInputChangeProps = (inputName: string, value: string) => void;
 
 export const useInput = ({ baseInputs }: Props) => {
-  const [inputs, setInputs] = useState(baseInputs);
+  const [inputs, setInputs] = useState(cloneDeep(baseInputs));
 
   const handleInputChange = (
     inputName: keyof typeof baseInputs,
@@ -34,7 +36,7 @@ export const useInput = ({ baseInputs }: Props) => {
   };
 
   const validateInputs = () => {
-    const inputCopy = { ...inputs };
+    const inputCopy = cloneDeep(inputs);
     let isFormValid = true;
     for (const inputObject of Object.values(inputCopy)) {
       const isInputValid = inputObject.validate(inputObject.val);

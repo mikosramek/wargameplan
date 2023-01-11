@@ -1,4 +1,4 @@
-import { useState, HTMLInputTypeAttribute } from "react";
+import { useState, HTMLInputTypeAttribute, useMemo } from "react";
 import * as Styled from "./Input.styled";
 
 type Props = {
@@ -6,7 +6,6 @@ type Props = {
   label: string;
   type?: HTMLInputTypeAttribute;
   value: string;
-  // stateHandler: ReturnType<typeof useState>;
   onChange: (name: any, input: string) => void;
   errorMessage?: string;
 };
@@ -27,13 +26,25 @@ export const Input = ({
           {errorMessage}
         </Styled.ErrorLabel>
       )}
-      <Styled.InputBase
-        type={type}
-        id={inputName}
-        name={inputName}
-        value={value}
-        onChange={(e) => onChange(inputName, e.target.value)}
-      />
+      {type === "textarea" && (
+        <Styled.TextArea
+          id={inputName}
+          name={inputName}
+          value={value}
+          onChange={(e) => onChange(inputName, e.target.value)}
+          aria-invalid={!!errorMessage}
+        />
+      )}
+      {type !== "textarea" && (
+        <Styled.InputBase
+          type={type}
+          id={inputName}
+          name={inputName}
+          value={value}
+          onChange={(e) => onChange(inputName, e.target.value)}
+          aria-invalid={!!errorMessage}
+        />
+      )}
     </>
   );
 };

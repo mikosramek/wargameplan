@@ -42,7 +42,9 @@ const ArmyPage = () => {
   return (
     <LayoutWrapper>
       <>
-        <Styled.Heading>{army.name}</Styled.Heading>
+        <Styled.Heading>
+          <Styled.InnerHeading>{army.name}</Styled.InnerHeading>
+        </Styled.Heading>
         <StepsPage steps={army.steps} />
       </>
     </LayoutWrapper>

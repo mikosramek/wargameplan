@@ -85,18 +85,20 @@ export const useApi = () => {
   );
 
   type postNewRuleProps = {
-    armyId: string;
-    stepId: string;
     name: string;
     text: string;
   };
   const postNewRule = useCallback(
-    ({ armyId, stepId, name, text }: postNewRuleProps) => {
+    ({ name, text }: postNewRuleProps) => {
       const url = getPostUrl("rule");
       return new Promise<ArmySteps[] | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
-          .post(url, { name, text, armyId, stepId }, { headers })
+          .post(
+            url,
+            { name, text, armyId: currentArmyId, stepId: currentStepId },
+            { headers }
+          )
           .then(({ data }) => res(data))
           .catch(rej);
       });

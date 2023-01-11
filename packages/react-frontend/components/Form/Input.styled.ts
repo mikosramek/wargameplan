@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Label = styled.label`
   display: block;
@@ -9,7 +9,18 @@ export const ErrorLabel = styled.label`
   color: var(--impact);
 `;
 
-export const InputBase = styled.input`
+const InputBaseStyling = css`
   margin-bottom: 10px;
   width: 100%;
+`;
+
+export const InputBase = styled.input`
+  ${InputBaseStyling}
+`;
+
+export const TextArea = styled.textarea`
+  ${InputBaseStyling}
+  resize: vertical;
+  min-height: 150px;
+  max-height: 50vh;
 `;
