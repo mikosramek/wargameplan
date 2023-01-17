@@ -6,10 +6,13 @@ import { useApi } from "./useApi";
 import { useLog } from "./useLog";
 
 const useArmies = () => {
-  const { getters } = useApi();
+  const { getters, deleters } = useApi();
   const { log, error } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
+  const updateCurrentArmyStepRule = useArmiesStore(
+    (state) => state.updateCurrentArmyStepRule
+  );
   const armies = useArmiesStore((state) => state.armies);
   const armiesFetched = useArmiesStore((state) => state.armiesFetched);
   const isLoggedIn = useAccountStore((state) => state.isLoggedIn);
@@ -51,7 +54,19 @@ const useArmies = () => {
     }
   };
 
-  return { armies, armiesFetched, handleArmyFetch };
+  const deleteRule = async (id: string) => {
+    log("DELETING RULE", id);
+    try {
+      const response = await deleters.deleteRule(id);
+      if (response && !(response instanceof Error)) {
+        updateCurrentArmyStepRule(response.stepId, response.rules);
+      }
+    } catch (e) {
+      error(e);
+    }
+  };
+
+  return { armies, armiesFetched, handleArmyFetch, deleteRule };
 };
 
 export default useArmies;
