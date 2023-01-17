@@ -32,7 +32,7 @@ router.post("/create", (req, res) => {
 router.delete("/remove", (req, res) => {
   const { stepId, ruleId } = req.body;
 
-  StepController.deleteRule({ stepId, ruleId }, (err, updatedSteps) => {
+  StepsController.deleteRule({ stepId, ruleId }, (err, updatedSteps) => {
     if (err) {
       console.error(err);
       return res.status(500).send(err.message);

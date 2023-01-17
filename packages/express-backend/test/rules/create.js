@@ -27,8 +27,8 @@ describe("Rules - Create", () => {
     it("returns steps with the proper rule added", (done) => {
       StepController.createRule(
         { stepId: step._id, name: "rule", text: "rule-text" },
-        (_err, updatedSteps) => {
-          const rules = updatedSteps[0].rules;
+        (_err, response) => {
+          const rules = response.rules;
           assert(!!rules && rules.length === 1);
           done();
         }

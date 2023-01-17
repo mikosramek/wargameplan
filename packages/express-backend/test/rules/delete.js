@@ -28,8 +28,8 @@ describe("Rules - Delete", () => {
     before((done) => {
       StepController.createRule(
         { stepId: step._id, name: "rule", text: "rule-text" },
-        (_err, updatedSteps) => {
-          rule = updatedSteps[0].rules[0];
+        (_err, response) => {
+          rule = response.rules[0];
           done();
         }
       );
@@ -37,8 +37,8 @@ describe("Rules - Delete", () => {
     it("has no rules left", (done) => {
       StepController.deleteRule(
         { stepId: step._id, ruleId: rule.id },
-        (_err, updatedSteps) => {
-          assert(updatedSteps[0].rules.length === 0);
+        (_err, response) => {
+          assert(response.rules.length === 0);
           done();
         }
       );
@@ -52,9 +52,9 @@ describe("Rules - Delete", () => {
         () => {
           StepController.createRule(
             { stepId: step._id, name: "rule2", text: "rule-text-2" },
-            (_err, updatedSteps) => {
-              rule = updatedSteps[0].rules[0];
-              rule2 = updatedSteps[0].rules[1];
+            (_err, response) => {
+              rule = response.rules[0];
+              rule2 = response.rules[1];
               done();
             }
           );

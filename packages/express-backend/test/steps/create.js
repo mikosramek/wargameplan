@@ -22,9 +22,9 @@ describe("Steps - Create", () => {
     it("is added to the correct army", (done) => {
       StepController.create(
         { name: "step", armyId: army._id },
-        (err, newStep) => {
-          assert(newStep.name === "step");
-          assert(newStep.armyId === army._id);
+        (err, response) => {
+          assert(response.step.name === "step");
+          assert(response.armyId === army._id);
           done();
         }
       );

@@ -6,7 +6,6 @@ const ArmyController = require("../armies/controller");
 router.get("/:armyId", (req, res) => {
   const { armyId } = req.params;
   const { accountid: accountId } = req.headers;
-  console.log({ armyId, accountId });
   ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
     if (isOwner) {
       StepsController.getArmySteps({ armyId }, (err, armies) => {
