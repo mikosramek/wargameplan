@@ -1,3 +1,4 @@
+import { orderSort } from "@utils/general";
 import { useEffect } from "react";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
@@ -37,7 +38,13 @@ const useArmies = () => {
       const steps = await getters.getArmySteps(id);
       if (steps && !(steps instanceof Error)) {
         log(steps);
-        updateArmySteps(id, steps);
+        const stepMap = steps.sort(orderSort).reduce((total, current) => {
+          return {
+            ...total,
+            [current.id]: current,
+          };
+        }, {});
+        updateArmySteps(id, stepMap);
       }
     } catch (e) {
       error(e);
