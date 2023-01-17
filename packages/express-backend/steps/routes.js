@@ -38,4 +38,27 @@ router.post("/create", (req, res) => {
   });
 });
 
+router.delete("/remove", (req, res) => {
+  const { stepId, armyId } = req.body;
+  const { accountid: accountId } = req.headers;
+  if (!stepId) return res.status(400).send("Step id required");
+
+  ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
+    if (isOwner) {
+      StepsController.deleteStep({ stepId }, (err, stepRemoved) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send(err.message);
+        }
+        if (stepRemoved === null) {
+          return res.status(400).send("Step not found");
+        }
+        return res.status(201).send({ armyId, stepIdRemoved: stepRemoved._id });
+      });
+    } else {
+      return res.status(403).send("Army not owned by account.");
+    }
+  });
+});
+
 module.exports = router;

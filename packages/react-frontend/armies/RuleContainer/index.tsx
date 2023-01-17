@@ -1,8 +1,7 @@
-import { MainButton } from "@components/MainButton";
+import { useCallback, useReducer } from "react";
 import { ArmyRule } from "@store/armies";
 import { useGeneralStore } from "@store/general";
 import useArmies from "hooks/useArmies";
-import { useCallback, useReducer } from "react";
 import * as Styled from "./RuleContainer.styled";
 
 type Props = {

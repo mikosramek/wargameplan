@@ -40,6 +40,12 @@ class StepController {
       }
     });
   }
+  deleteStep({ stepId }, callback) {
+    Step.findByIdAndRemove(stepId).exec((err, step) => {
+      if (err) return callback(err);
+      callback(null, step);
+    });
+  }
   createRule({ stepId, name, text }, callback) {
     Step.findById(stepId, (err, step) => {
       if (err) callback(err);
