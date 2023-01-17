@@ -1,14 +1,15 @@
-import styles from "./index.module.scss";
+import * as Styled from "./MainButton.styled";
 
 type Props = {
   onClick?: () => void;
   copy: string;
+  className?: string;
 };
 
-export const MainButton = ({ onClick, copy }: Props) => {
+export const MainButton = ({ onClick, copy, className = "" }: Props) => {
   return (
-    <button type="submit" className={styles.Button} onClick={onClick}>
+    <Styled.Button type="submit" className={className} onClick={onClick}>
       {copy}
-    </button>
+    </Styled.Button>
   );
 };

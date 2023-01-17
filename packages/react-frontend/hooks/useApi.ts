@@ -2,7 +2,12 @@ import { useCallback } from "react";
 import axios from "axios";
 import { API_BASE } from "@utils/config";
 import { useAccountStore } from "store/account";
-import { ArmySteps, UnParsedArmy, useArmiesStore } from "store/armies";
+import {
+  ArmyRule,
+  ArmySteps,
+  UnParsedArmy,
+  useArmiesStore,
+} from "store/armies";
 
 export const ENDPOINTS = {
   get: {
@@ -22,6 +27,7 @@ export const ENDPOINTS = {
 };
 type urlGetterType = keyof typeof ENDPOINTS.get;
 type urlPosterType = keyof typeof ENDPOINTS.post;
+type urlDeleteType = keyof typeof ENDPOINTS.delete;
 
 type LoginResponse = { id: string; email: string; approved: boolean };
 
@@ -41,6 +47,10 @@ export const useApi = () => {
 
   const getPostUrl = useCallback((type: urlPosterType) => {
     return `${API_BASE}${ENDPOINTS.post[type]}`;
+  }, []);
+
+  const getDeleteUrl = useCallback((type: urlDeleteType) => {
+    return `${API_BASE}${ENDPOINTS.delete[type]}`;
   }, []);
 
   const getArmies = useCallback(() => {
@@ -70,10 +80,19 @@ export const useApi = () => {
   type postNewStepProps = {
     stepName: string;
   };
+  type newStepResponse = {
+    armyId: string;
+    step: {
+      id: string;
+      name: string;
+      order: number;
+      rules: ArmyRule[];
+    };
+  };
   const postNewStep = useCallback(
     ({ stepName }: postNewStepProps) => {
       const url = getPostUrl("step");
-      return new Promise<ArmySteps[] | Error | null>((res, rej) => {
+      return new Promise<newStepResponse | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
           .post(url, { name: stepName, armyId: currentArmyId }, { headers })
@@ -88,10 +107,14 @@ export const useApi = () => {
     name: string;
     text: string;
   };
+  type ruleResponseType = {
+    stepId: string;
+    rules: ArmyRule[];
+  };
   const postNewRule = useCallback(
     ({ name, text }: postNewRuleProps) => {
       const url = getPostUrl("rule");
-      return new Promise<ArmySteps[] | Error | null>((res, rej) => {
+      return new Promise<ruleResponseType | Error | null>((res, rej) => {
         if (!accountId) return null;
         axios
           .post(
@@ -104,6 +127,23 @@ export const useApi = () => {
       });
     },
     [getPostUrl, accountId]
+  );
+
+  const deleteRule = useCallback(
+    (ruleId: string) => {
+      const url = getDeleteUrl("rule");
+      return new Promise<ruleResponseType | Error | null>((res, rej) => {
+        if (!accountId) return null;
+        axios
+          .delete(url, {
+            headers,
+            data: { stepId: currentStepId, ruleId, armyId: currentArmyId },
+          })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [getDeleteUrl, accountId]
   );
 
   const login = useCallback(
@@ -125,5 +165,6 @@ export const useApi = () => {
     login,
     getters: { getArmies, getArmySteps },
     posters: { postNewStep, postNewRule },
+    deleters: { deleteRule },
   };
 };

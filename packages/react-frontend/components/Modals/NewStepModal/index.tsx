@@ -20,8 +20,8 @@ export const NewStepModal = () => {
   const { posters } = useApi();
   const { error } = useLog();
   const closeModal = useGeneralStore((state) => state.closeModal);
-  const updateCurrentArmySteps = useArmiesStore(
-    (state) => state.updateCurrentArmySteps
+  const updateCurrentArmyStep = useArmiesStore(
+    (state) => state.updateCurrentArmyStep
   );
   const { inputs, handleInputChange, validateInputs } = useInput({
     baseInputs,
@@ -39,7 +39,7 @@ export const NewStepModal = () => {
         .then((updatedSteps) => {
           if (updatedSteps && !(updatedSteps instanceof Error)) {
             closeModal();
-            updateCurrentArmySteps(updatedSteps);
+            updateCurrentArmyStep(updatedSteps.step.id, updatedSteps.step);
           }
         })
         .catch(error);

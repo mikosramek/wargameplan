@@ -5,7 +5,7 @@ orderSort = (a, b) => {
   else if (a.order < b.order) return -1;
   return 0;
 };
-cleanRules = (rules) => {
+cleanAndSortRules = (rules) => {
   return rules.sort(orderSort).map(({ _id, name, text, iconUrl }) => ({
     id: _id,
     name,
@@ -16,7 +16,7 @@ cleanRules = (rules) => {
 class StepController {
   cleanStep(step) {
     const { _id: id, name, order, rules } = step;
-    return { id, name, order, rules: cleanRules(rules) };
+    return { id, name, order, rules: cleanAndSortRules(rules) };
   }
   getArmySteps({ armyId }, callback) {
     Step.find({ armyId }).exec((err, steps) => {
@@ -31,7 +31,11 @@ class StepController {
         const newStep = new Step({ name, armyId, order: count });
         newStep.save((err) => {
           if (err) callback(err);
-          else this.getArmySteps({ armyId: newStep.armyId }, callback);
+          else
+            callback(null, {
+              armyId: newStep.armyId,
+              step: this.cleanStep(newStep),
+            });
         });
       }
     });
@@ -48,7 +52,10 @@ class StepController {
         step.save((err) => {
           if (err) callback(err);
           else {
-            this.getArmySteps({ armyId: step.armyId }, callback);
+            callback(null, {
+              stepId: step._id,
+              rules: cleanAndSortRules(step.rules),
+            });
           }
         });
       }
@@ -63,6 +70,8 @@ class StepController {
         const ruleIndex = rules.findIndex(
           (rule) => rule._id.toString() === ruleId.toString()
         );
+        if (ruleIndex === -1)
+          return callback(new Error("No rule found on provided step"));
         rules.splice(ruleIndex, 1);
         // update ruleCount
         step.ruleCount = rules.length;
@@ -79,8 +88,10 @@ class StepController {
         step.save((err) => {
           if (err) callback(err);
           else {
-            // return this.getArmySteps
-            this.getArmySteps({ armyId: step.armyId }, callback);
+            callback(null, {
+              stepId: step._id,
+              rules: cleanAndSortRules(step.rules),
+            });
           }
         });
       }

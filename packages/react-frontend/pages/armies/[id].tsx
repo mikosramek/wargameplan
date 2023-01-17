@@ -29,13 +29,13 @@ const ArmyPage = () => {
     }
   }, [id]);
 
-  useEffect(() => {
-    return () => {
-      clearCurrentArmyId();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     clearCurrentArmyId();
+  //   };
+  // }, []);
 
-  if (!armiesFetched || !armyFetched) {
+  if (!armiesFetched || !armyFetched || !id) {
     return null; // TODO: loader
   }
 

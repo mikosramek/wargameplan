@@ -4,7 +4,7 @@ export const Wrapper = styled.section`
   width: 90%;
   max-width: 810px;
   margin: 0 auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 15px;
   overflow: hidden;
 `;
@@ -26,6 +26,6 @@ export const NewRuleButton = styled.button`
   width: 100%;
   padding: 10px 0;
   border: none;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border);
   font-size: 24px;
 `;
