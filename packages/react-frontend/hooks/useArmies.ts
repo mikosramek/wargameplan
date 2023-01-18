@@ -10,6 +10,9 @@ const useArmies = () => {
   const { log, error } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
+  const removeCurrentArmyStep = useArmiesStore(
+    (state) => state.removeCurrentArmyStep
+  );
   const updateCurrentArmyStepRule = useArmiesStore(
     (state) => state.updateCurrentArmyStepRule
   );
@@ -66,7 +69,19 @@ const useArmies = () => {
     }
   };
 
-  return { armies, armiesFetched, handleArmyFetch, deleteRule };
+  const deleteStep = async (id: string) => {
+    log("DELETING CURRENT STEP");
+    try {
+      const response = await deleters.deleteStep(id);
+      if (response && !(response instanceof Error)) {
+        removeCurrentArmyStep(response.stepIdRemoved);
+      }
+    } catch (e) {
+      error(e);
+    }
+  };
+
+  return { armies, armiesFetched, handleArmyFetch, deleteRule, deleteStep };
 };
 
 export default useArmies;

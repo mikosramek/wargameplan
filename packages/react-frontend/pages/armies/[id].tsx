@@ -12,12 +12,10 @@ const ArmyPage = () => {
   const { id } = router.query;
   const { armiesFetched, handleArmyFetch } = useArmies();
   const setCurrentArmyId = useArmiesStore((state) => state.setCurrentArmyId);
-  const clearCurrentArmyId = useArmiesStore(
-    (state) => state.clearCurrentArmyId
-  );
 
-  const army = useArmiesStore((state) => state.getArmy)(id as string);
+  const getArmy = useArmiesStore((state) => state.getArmy);
 
+  const army = getArmy(id as string);
   const armyFetched = !!army && army.fetched;
 
   useEffect(() => {
@@ -28,12 +26,6 @@ const ArmyPage = () => {
       }
     }
   }, [id]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     clearCurrentArmyId();
-  //   };
-  // }, []);
 
   if (!armiesFetched || !armyFetched || !id) {
     return null; // TODO: loader
