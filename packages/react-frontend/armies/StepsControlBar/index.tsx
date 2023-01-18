@@ -9,6 +9,7 @@ type Props = {
 export const StepsControlBar = ({ previousStep, nextStep }: Props) => {
   const { editorMode, toggleEditorMode } = useGeneralStore();
   const openModal = useGeneralStore((state) => state.openModal);
+
   return (
     <Styled.Nav>
       <Styled.List>

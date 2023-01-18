@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -34,8 +35,11 @@ interface State {
   updateArmySteps: (armyId: string, steps: Record<string, ArmySteps>) => void;
   updateCurrentArmyStep: (stepId: string, steps: ArmySteps) => void;
   updateCurrentArmyStepRule: (stepId: string, rules: ArmyRule[]) => void;
+  removeCurrentArmyStep: (stepId: string) => void;
   armies: Armies;
   armiesFetched: boolean;
+  fetchedArmyIds: string[];
+  getHasArmyBeenFetched: (id: string) => boolean;
   getArmy: (id: string) => Army;
   getArmySteps: (id: string) => ArmySteps[];
   currentArmyId: string | null;
@@ -61,6 +65,8 @@ export const useArmiesStore = create<State>()(
     (set, get) => ({
       armyIds: [],
       armiesFetched: false,
+      fetchedArmyIds: [],
+      getHasArmyBeenFetched: (id) => !!get().fetchedArmyIds.includes(id),
       setArmies: (armies) =>
         set(
           () => ({
@@ -75,6 +81,7 @@ export const useArmiesStore = create<State>()(
         set(
           (state: State) => {
             return {
+              fetchedArmyIds: [...state.fetchedArmyIds, armyId],
               armies: {
                 ...state.armies,
                 [armyId]: {
@@ -106,7 +113,7 @@ export const useArmiesStore = create<State>()(
             },
           };
         }),
-      updateCurrentArmyStepRule: (stepId, rules) => {
+      updateCurrentArmyStepRule: (stepId, rules) =>
         set((state: State) => {
           const currentArmyId = state.currentArmyId;
           if (!currentArmyId) return state;
@@ -126,8 +133,24 @@ export const useArmiesStore = create<State>()(
               },
             },
           };
-        });
-      },
+        }),
+      removeCurrentArmyStep: (stepId) =>
+        set((state: State) => {
+          const currentArmyId = state.currentArmyId;
+          if (!currentArmyId) return state;
+          const currentArmy = state.armies[currentArmyId];
+          const steps = cloneDeep(currentArmy.steps);
+          delete steps[stepId];
+          return {
+            armies: {
+              ...state.armies,
+              [currentArmyId]: {
+                ...currentArmy,
+                steps,
+              },
+            },
+          };
+        }),
       armies: {},
       getArmy: (id: string) => get().armies[id],
       getArmySteps: (id: string) => {

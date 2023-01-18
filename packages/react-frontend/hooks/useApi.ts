@@ -23,6 +23,7 @@ export const ENDPOINTS = {
   },
   delete: {
     rule: "/v1/rules/remove",
+    step: "/v1/steps/remove",
   },
 };
 type urlGetterType = keyof typeof ENDPOINTS.get;
@@ -61,7 +62,7 @@ export const useApi = () => {
         .then(({ data }) => res(data))
         .catch(rej);
     });
-  }, [getGetUrl]);
+  }, [getGetUrl, headers]);
 
   const getArmySteps = useCallback(
     (armyId: string) => {
@@ -74,7 +75,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getGetUrl, accountId]
+    [getGetUrl, accountId, headers]
   );
 
   type postNewStepProps = {
@@ -100,7 +101,34 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPostUrl, accountId, currentArmyId]
+    [getPostUrl, accountId, currentArmyId, headers]
+  );
+
+  /*
+{
+    "armyId": "6388dbbb74a6cc4991ea1323",
+    "stepIdRemoved": "63c6e98acb5f77b19eb198e7"
+}
+  */
+  type removedStepResponseType = {
+    armyId: string;
+    stepIdRemoved: string;
+  };
+  const deleteStep = useCallback(
+    (stepId: string) => {
+      const url = getDeleteUrl("step");
+      return new Promise<removedStepResponseType | Error | null>((res, rej) => {
+        if (!accountId) return null;
+        axios
+          .delete(url, {
+            headers,
+            data: { stepId, armyId: currentArmyId },
+          })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [currentArmyId, headers]
   );
 
   type postNewRuleProps = {
@@ -126,7 +154,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPostUrl, accountId]
+    [getPostUrl, accountId, headers]
   );
 
   const deleteRule = useCallback(
@@ -143,7 +171,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getDeleteUrl, accountId]
+    [getDeleteUrl, accountId, headers]
   );
 
   const login = useCallback(
@@ -165,6 +193,6 @@ export const useApi = () => {
     login,
     getters: { getArmies, getArmySteps },
     posters: { postNewStep, postNewRule },
-    deleters: { deleteRule },
+    deleters: { deleteRule, deleteStep },
   };
 };

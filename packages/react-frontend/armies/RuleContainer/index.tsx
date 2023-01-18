@@ -19,7 +19,7 @@ const RuleContainer = ({ rule }: Props) => {
   const handleDelete = useCallback(() => {
     const confirmation = confirm(`Delete the "${rule.name}" rule?`);
     if (confirmation) deleteRule(rule.id);
-  }, []);
+  }, [rule]);
 
   return (
     <Styled.Wrapper>
