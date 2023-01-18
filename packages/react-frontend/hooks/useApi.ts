@@ -34,7 +34,7 @@ type LoginResponse = { id: string; email: string; approved: boolean };
 
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
-  //   const session = useAccountStore((state) => state.session);
+  //   const session = useAccountStore((state) => state.session); // TODO: some sort of session validation
   const { currentArmyId, currentStepId } = useArmiesStore((state) => ({
     currentArmyId: state.currentArmyId,
     currentStepId: state.currentStepId,
@@ -104,12 +104,6 @@ export const useApi = () => {
     [getPostUrl, accountId, currentArmyId, headers]
   );
 
-  /*
-{
-    "armyId": "6388dbbb74a6cc4991ea1323",
-    "stepIdRemoved": "63c6e98acb5f77b19eb198e7"
-}
-  */
   type removedStepResponseType = {
     armyId: string;
     stepIdRemoved: string;

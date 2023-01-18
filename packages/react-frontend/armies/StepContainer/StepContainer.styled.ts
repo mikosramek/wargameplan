@@ -33,9 +33,7 @@ export const DeleteButton = styled(MainButton)`
   padding: 0;
 `;
 
-export const InnerWrapper = styled.div`
-  /* padding: 15px; */
-`;
+export const InnerWrapper = styled.div``;
 
 export const NewRuleButton = styled.button`
   display: block;

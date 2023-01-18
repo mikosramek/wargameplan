@@ -18,7 +18,6 @@ export const HeadingWrapper = styled.div`
 `;
 
 export const Heading = styled.h3`
-  /* padding: 5px 15px; */
   padding: 0;
   font-size: 18px;
   margin: 0;

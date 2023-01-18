@@ -6,7 +6,6 @@ export interface State {
   accountId: string | null;
   session: string | null;
   isVerified: boolean;
-  // login:({id: string; session: string; isVerified: boolean;}) => set
   login: (id: string, session: string, isVerified: boolean) => void;
 }
 
