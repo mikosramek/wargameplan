@@ -15,7 +15,6 @@ export const HeadingWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   background: var(--main);
-  border-radius: 15px 15px 0 0;
   padding: 15px;
 `;
 

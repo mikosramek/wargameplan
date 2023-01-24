@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const Header = styled.header`
+  margin-bottom: 15px;
+`;
+
 export const Heading = styled.h1`
   margin: 0 auto;
   padding: 15px 0;
