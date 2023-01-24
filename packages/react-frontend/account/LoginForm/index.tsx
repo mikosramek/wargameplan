@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import Router from "next/router";
 import { MainButton } from "@components/MainButton";
 import { IS_DEV } from "@utils/config";
-import styles from "./loginForm.module.scss";
-import Router from "next/router";
 import { useApi } from "hooks/useApi";
 import { useAccountStore } from "store/account";
 import { useLog } from "hooks/useLog";
+import { Input } from "@components/Form/Input";
+import * as Styled from "./LoginForm.styled";
 
 export const LoginForm = () => {
   const { login } = useApi();
@@ -24,31 +25,31 @@ export const LoginForm = () => {
             Router.push("/armies");
           }
         })
-        .catch(error);
+        .catch((err) => {
+          alert(err);
+        });
     },
     [login, email, password]
   );
 
   return (
-    <form onSubmit={handleSubmit} className={styles.LoginForm}>
-      <h2 className={styles.LoginForm__title}>Login</h2>
-      <label htmlFor="email">Email</label>
-      <input
+    <Styled.Form onSubmit={handleSubmit}>
+      <Styled.Title>Login</Styled.Title>
+      <Input
         type="email"
-        name="email"
-        id="email"
+        inputName="email"
+        label="Email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={setEmail}
       />
-      <label htmlFor="password">Password</label>
-      <input
+      <Input
         type="password"
-        name="password"
-        id="password"
+        inputName="password"
+        label="Password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={setPassword}
       />
       <MainButton copy="Login" />
-    </form>
+    </Styled.Form>
   );
 };

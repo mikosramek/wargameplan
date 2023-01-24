@@ -4,8 +4,7 @@ import useArmies from "hooks/useArmies";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useArmiesStore } from "@store/armies";
-
-import * as Styled from "./id.styled";
+import { useHeading } from "hooks/useHeading";
 
 const ArmyPage = () => {
   const router = useRouter();
@@ -17,6 +16,8 @@ const ArmyPage = () => {
 
   const army = getArmy(id as string);
   const armyFetched = !!army && army.fetched;
+
+  useHeading({ heading: armyFetched ? army.name : "-" });
 
   useEffect(() => {
     if (id && typeof id === "string") {
@@ -33,12 +34,7 @@ const ArmyPage = () => {
 
   return (
     <LayoutWrapper>
-      <>
-        <Styled.Heading>
-          <Styled.InnerHeading>{army.name}</Styled.InnerHeading>
-        </Styled.Heading>
-        <StepsPage steps={army.steps} />
-      </>
+      <StepsPage steps={army.steps} />
     </LayoutWrapper>
   );
 };

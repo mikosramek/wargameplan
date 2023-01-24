@@ -1,4 +1,4 @@
-import { useState, HTMLInputTypeAttribute, useMemo } from "react";
+import { HTMLInputTypeAttribute } from "react";
 import * as Styled from "./Input.styled";
 
 type Props = {

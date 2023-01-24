@@ -13,14 +13,22 @@ export const StepsControlBar = ({ previousStep, nextStep }: Props) => {
   return (
     <Styled.Nav>
       <Styled.List>
-        <Styled.InnerControlWrapper>
+        <Styled.PhaseControlWrapper>
           <Styled.ListItem>
-            <Styled.ListButton onClick={previousStep}>&#x3c;</Styled.ListButton>
+            <Styled.TurnButton
+              ariaLabel="Navigate to previous phase"
+              copy="&#x3c;"
+              onClick={previousStep}
+            />
           </Styled.ListItem>
           <Styled.ListItem>
-            <Styled.ListButton onClick={nextStep}>&#x3e;</Styled.ListButton>
+            <Styled.TurnButton
+              ariaLabel="Navigate to next phase"
+              onClick={nextStep}
+              copy="&#x3e;"
+            />
           </Styled.ListItem>
-        </Styled.InnerControlWrapper>
+        </Styled.PhaseControlWrapper>
         <Styled.InnerControlWrapper>
           <Styled.ListItem>
             <Styled.ListInput
@@ -37,14 +45,14 @@ export const StepsControlBar = ({ previousStep, nextStep }: Props) => {
               </Styled.ToggleLabel>
             </Styled.ListLabel>
           </Styled.ListItem>
-          <Styled.ListItem>
-            <Styled.ListButton
-              onClick={() => openModal("NewStep")}
-              disabled={!editorMode}
-            >
-              new phase
-            </Styled.ListButton>
-          </Styled.ListItem>
+          {!!editorMode && (
+            <Styled.ListItem>
+              <Styled.ListButton
+                onClick={() => openModal("NewStep")}
+                copy="Add a phase"
+              />
+            </Styled.ListItem>
+          )}
         </Styled.InnerControlWrapper>
       </Styled.List>
     </Styled.Nav>

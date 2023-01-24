@@ -1,3 +1,4 @@
+import { MainButton } from "@components/MainButton";
 import styled, { css } from "styled-components";
 
 export const Nav = styled.nav`
@@ -19,10 +20,26 @@ export const ListItem = styled.li`
   margin-right: 10px;
 `;
 
-export const ListButton = styled.button`
+export const ListButton = styled(MainButton)`
   padding: 8px 10px 6px;
   &:disabled {
     cursor: auto;
+    background: var(--border);
+  }
+`;
+
+export const TurnButton = styled(ListButton)`
+  border: 1px solid var(--black);
+  width: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border-radius: 100%;
+  font-size: 28px;
+  &:first-of-type {
+    margin-bottom: 15px;
   }
 `;
 
@@ -81,4 +98,12 @@ export const ListInput = styled.input`
 export const InnerControlWrapper = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const PhaseControlWrapper = styled(InnerControlWrapper)`
+  flex-direction: column;
+  position: absolute;
+  right: 10px;
+  /* top: 40%; */
+  bottom: 10%;
 `;

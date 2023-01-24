@@ -8,11 +8,15 @@ interface State {
   currentModal: keyof typeof ModalType | null;
   openModal: (modal: keyof typeof ModalType) => void;
   closeModal: () => void;
+  heading: string;
+  setHeading: (newHeading: string) => void;
 }
 
 export const useGeneralStore = create<State>()(
   devtools(
     (set) => ({
+      heading: "Warhammer Gameplan",
+      setHeading: (newHeading: string) => set(() => ({ heading: newHeading })),
       editorMode: false,
       toggleEditorMode: () =>
         set((state) => ({ editorMode: !state.editorMode })),
