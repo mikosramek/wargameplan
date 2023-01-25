@@ -32,6 +32,8 @@ export type ArmyRule = {
 interface State {
   armyIds: string[];
   setArmies: (armies: UnParsedArmy[]) => void;
+  addArmy: (army: UnParsedArmy) => void;
+  removeArmy: (armyId: string) => void;
   updateArmySteps: (armyId: string, steps: Record<string, ArmySteps>) => void;
   updateCurrentArmyStep: (stepId: string, steps: ArmySteps) => void;
   updateCurrentArmyStepRule: (stepId: string, rules: ArmyRule[]) => void;
@@ -69,14 +71,40 @@ export const useArmiesStore = create<State>()(
       getHasArmyBeenFetched: (id) => !!get().fetchedArmyIds.includes(id),
       setArmies: (armies) =>
         set(
-          () => ({
-            armyIds: parseArmies(armies).armyIds,
-            armies: parseArmies(armies).armies,
-            armiesFetched: true,
-          }),
+          () => {
+            const parsedArmies = parseArmies(armies);
+            return {
+              armyIds: parsedArmies.armyIds,
+              armies: parsedArmies.armies,
+              armiesFetched: true,
+            };
+          },
           false,
           "set/armies"
         ),
+      addArmy: (army) =>
+        set(
+          (state: State) => {
+            const parsedArmy = parseArmies([army]);
+            return {
+              armyIds: [...state.fetchedArmyIds, ...parsedArmy.armyIds],
+              armies: {
+                ...state.armies,
+                ...parsedArmy.armies,
+              },
+            };
+          },
+          false,
+          "add/armies"
+        ),
+      removeArmy: (armyId) =>
+        set((state: State) => {
+          const armies = cloneDeep(state.armies);
+          delete armies[armyId];
+          return {
+            armies,
+          };
+        }),
       updateArmySteps: (armyId, steps) =>
         set(
           (state: State) => {

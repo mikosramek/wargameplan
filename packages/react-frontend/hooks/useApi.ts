@@ -24,6 +24,7 @@ export const ENDPOINTS = {
   delete: {
     rule: "/v1/rules/remove",
     step: "/v1/steps/remove",
+    army: "v1/armies/remove",
   },
 };
 type urlGetterType = keyof typeof ENDPOINTS.get;
@@ -63,6 +64,40 @@ export const useApi = () => {
         .catch(rej);
     });
   }, [getGetUrl, headers]);
+
+  const postNewArmy = useCallback(
+    (armyName: string) => {
+      const url = getPostUrl("armies");
+      return new Promise<UnParsedArmy | Error>((res, rej) => {
+        axios
+          .post(url, { name: armyName }, { headers })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [getPostUrl, headers]
+  );
+
+  type removedArmyResponse = {
+    armyId: string;
+  };
+
+  const deleteArmy = useCallback(
+    (armyId: string) => {
+      const url = getDeleteUrl("army");
+      return new Promise<removedArmyResponse | Error | null>((res, rej) => {
+        if (!accountId) return null;
+        axios
+          .delete(url, {
+            headers,
+            data: { armyId },
+          })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [currentArmyId, headers]
+  );
 
   const getArmySteps = useCallback(
     (armyId: string) => {
@@ -186,7 +221,7 @@ export const useApi = () => {
   return {
     login,
     getters: { getArmies, getArmySteps },
-    posters: { postNewStep, postNewRule },
-    deleters: { deleteRule, deleteStep },
+    posters: { postNewArmy, postNewStep, postNewRule },
+    deleters: { deleteArmy, deleteStep, deleteRule },
   };
 };
