@@ -28,7 +28,7 @@ class ArmyController {
     const newArmy = new Army(armyConfig);
     newArmy.save((err) => {
       if (err) callback(err);
-      else callback(null, newArmy);
+      else callback(null, this.cleanArmy(newArmy));
     });
   }
   getOne(query, callback) {
