@@ -1,5 +1,4 @@
 const ArmyController = require("../../armies/controller");
-const StepController = require("../../steps/controller");
 const Account = require("../../accounts/schema");
 const assert = require("assert");
 
