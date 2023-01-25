@@ -24,7 +24,7 @@ export const ENDPOINTS = {
   delete: {
     rule: "/v1/rules/remove",
     step: "/v1/steps/remove",
-    army: "v1/armies/remove",
+    army: "/v1/armies/remove",
   },
 };
 type urlGetterType = keyof typeof ENDPOINTS.get;

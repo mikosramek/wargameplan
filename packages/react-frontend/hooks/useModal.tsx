@@ -3,10 +3,12 @@ import { NewRuleModal } from "@components/Modals/NewRuleModal";
 import { NewStepModal } from "@components/Modals/NewStepModal";
 import ModalWrapper from "@components/Modals/ModalWrapper";
 import { useGeneralStore } from "@store/general";
+import { NewArmyModal } from "@components/Modals/NewArmyModal";
 
 export const ModalType = {
   NewRule: "NewRule",
   NewStep: "NewStep",
+  NewArmy: "NewArmy",
 };
 
 const useModal = () => {
@@ -25,6 +27,12 @@ const useModal = () => {
         return (
           <ModalWrapper heading="Add a New Step">
             <NewStepModal />
+          </ModalWrapper>
+        );
+      case "NewArmy":
+        return (
+          <ModalWrapper heading="Add a New Army">
+            <NewArmyModal />
           </ModalWrapper>
         );
       default:
