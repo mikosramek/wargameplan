@@ -37,4 +37,21 @@ router.get("/:armyId", (req, res) => {
   });
 });
 
+router.delete("/remove", (req, res) => {
+  const { accountid: accountId } = req.headers;
+  const { armyId } = req.body;
+  if (!armyId) return res.status(400).send("Army id required");
+
+  ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
+    if (!isOwner) return res.status(403).send("Army not owned by account.");
+
+    ArmyController.delete({ armyId }, (err, armyRemoved) => {
+      if (err) {
+        return res.status(400).send(err.message);
+      }
+      return res.status(200).send({ armyId: armyRemoved._id });
+    });
+  });
+});
+
 module.exports = router;

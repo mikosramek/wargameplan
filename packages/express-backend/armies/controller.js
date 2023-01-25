@@ -1,3 +1,4 @@
+const Step = require("../steps/schema");
 const Army = require("./schema");
 
 // _id
@@ -27,7 +28,7 @@ class ArmyController {
     const newArmy = new Army(armyConfig);
     newArmy.save((err) => {
       if (err) callback(err);
-      else callback(null, newArmy);
+      else callback(null, this.cleanArmy(newArmy));
     });
   }
   getOne(query, callback) {
@@ -37,6 +38,16 @@ class ArmyController {
     });
   }
   // delete
+  delete({ armyId }, callback) {
+    Army.findByIdAndRemove(armyId).exec((err, army) => {
+      if (err) return callback(err);
+
+      Step.deleteMany({ armyId: army._id }).exec((err) => {
+        if (err) return callback(err);
+        callback(null, army);
+      });
+    });
+  }
   // update
 }
 

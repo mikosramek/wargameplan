@@ -6,9 +6,11 @@ import { useApi } from "./useApi";
 import { useLog } from "./useLog";
 
 const useArmies = () => {
-  const { getters, deleters } = useApi();
+  const { getters, deleters, posters } = useApi();
   const { log, error } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
+  const addArmy = useArmiesStore((state) => state.addArmy);
+  const removeArmy = useArmiesStore((state) => state.removeArmy);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
   const removeCurrentArmyStep = useArmiesStore(
     (state) => state.removeCurrentArmyStep
@@ -81,7 +83,41 @@ const useArmies = () => {
     }
   };
 
-  return { armies, armiesFetched, handleArmyFetch, deleteRule, deleteStep };
+  const createArmy = async (armyName: string) => {
+    log("CREATING ARMY");
+    try {
+      const response = await posters.postNewArmy(armyName);
+      if (response && !(response instanceof Error)) {
+        // add new army to store
+        addArmy(response);
+      }
+    } catch (e) {
+      error(e);
+    }
+  };
+
+  const deleteArmy = async (armyId: string) => {
+    log("REMOVING ARMY", armyId);
+    try {
+      const response = await deleters.deleteArmy(armyId);
+      if (response && !(response instanceof Error)) {
+        // remove army from store
+        removeArmy(response.armyId);
+      }
+    } catch (e) {
+      error(e);
+    }
+  };
+
+  return {
+    armies,
+    armiesFetched,
+    handleArmyFetch,
+    deleteRule,
+    deleteStep,
+    createArmy,
+    deleteArmy,
+  };
 };
 
 export default useArmies;

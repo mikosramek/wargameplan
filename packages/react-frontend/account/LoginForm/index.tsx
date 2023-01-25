@@ -25,9 +25,7 @@ export const LoginForm = () => {
             Router.push("/armies");
           }
         })
-        .catch((err) => {
-          alert(err);
-        });
+        .catch(error);
     },
     [login, email, password]
   );

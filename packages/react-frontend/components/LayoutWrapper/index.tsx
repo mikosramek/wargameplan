@@ -1,5 +1,6 @@
 import Footer from "@components/Footer";
 import Header from "@components/Header";
+import useModal from "hooks/useModal";
 import Head from "next/head";
 import { ReactNode } from "react";
 
@@ -8,6 +9,7 @@ type Props = {
 };
 
 const LayoutWrapper = ({ children }: Props) => {
+  const { Modal } = useModal();
   return (
     <>
       <Head>
@@ -20,7 +22,10 @@ const LayoutWrapper = ({ children }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main>{children}</main>
+      <main>
+        {children}
+        {Modal}
+      </main>
       <Footer />
     </>
   );
