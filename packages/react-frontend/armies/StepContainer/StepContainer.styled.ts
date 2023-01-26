@@ -21,7 +21,7 @@ export const HeadingWrapper = styled.div`
 export const Heading = styled.h2`
   margin: 0;
   font-size: 22px;
-  width: 80%;
+  width: 60%;
 `;
 
 export const DeleteButton = styled(MainButton)`
@@ -30,6 +30,10 @@ export const DeleteButton = styled(MainButton)`
   border-left: 1px solid var(--border);
   width: 20%;
   padding: 0;
+`;
+
+export const ReOrderButton = styled(DeleteButton)`
+  width: 10%;
 `;
 
 export const InnerWrapper = styled.div``;

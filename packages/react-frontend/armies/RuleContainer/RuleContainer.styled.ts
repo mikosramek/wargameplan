@@ -25,7 +25,7 @@ export const Heading = styled.h3`
 `;
 
 export const HeadingButton = styled.button`
-  width: 80%;
+  width: 60%;
   background: none;
   border: none;
   flex-grow: 1;
@@ -45,4 +45,8 @@ export const DeleteButton = styled(MainButton)`
   flex-shrink: 1;
   border-left: 1px solid var(--border);
   border-radius: 0;
+`;
+
+export const ReOrderButton = styled(DeleteButton)`
+  width: 10%;
 `;

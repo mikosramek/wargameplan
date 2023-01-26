@@ -19,12 +19,26 @@ const StepContainer = ({ step }: Props) => {
     if (confirmation) deleteStep(step.id);
   }, [step]);
 
+  const handleReorder = useCallback((direction: number) => {}, [step]);
+
   return (
     <Styled.Wrapper>
       <Styled.HeadingWrapper>
         <Styled.Heading>{step.name}</Styled.Heading>
         {!!editorMode && (
-          <Styled.DeleteButton copy="Delete phase" onClick={handleDelete} />
+          <>
+            <Styled.ReOrderButton
+              copy="<"
+              ariaLabel="Moves phase left one"
+              onClick={() => handleReorder(-1)}
+            />
+            <Styled.ReOrderButton
+              copy=">"
+              ariaLabel="Moves phase right one"
+              onClick={() => handleReorder(1)}
+            />
+            <Styled.DeleteButton copy="Delete phase" onClick={handleDelete} />
+          </>
         )}
       </Styled.HeadingWrapper>
       <Styled.InnerWrapper>

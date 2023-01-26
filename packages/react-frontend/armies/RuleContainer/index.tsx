@@ -21,6 +21,8 @@ const RuleContainer = ({ rule }: Props) => {
     if (confirmation) deleteRule(rule.id);
   }, [rule]);
 
+  const handleReorder = useCallback((direction: number) => {}, [rule]);
+
   return (
     <Styled.Wrapper>
       <Styled.HeadingWrapper>
@@ -28,7 +30,19 @@ const RuleContainer = ({ rule }: Props) => {
           <Styled.Heading>{rule.name}</Styled.Heading>
         </Styled.HeadingButton>
         {isEditorMode && (
-          <Styled.DeleteButton copy="Delete rule" onClick={handleDelete} />
+          <>
+            <Styled.ReOrderButton
+              copy="^"
+              ariaLabel="Moves rule up one"
+              onClick={() => handleReorder(-1)}
+            />
+            <Styled.ReOrderButton
+              copy="⌄"
+              ariaLabel="Moves rule down one"
+              onClick={() => handleReorder(1)}
+            />
+            <Styled.DeleteButton copy="Delete rule" onClick={handleDelete} />
+          </>
         )}
       </Styled.HeadingWrapper>
       {!!isCopyVisible && <Styled.Copy>{rule.text}</Styled.Copy>}
