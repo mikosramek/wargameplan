@@ -49,4 +49,7 @@ export const DeleteButton = styled(MainButton)`
 
 export const ReOrderButton = styled(DeleteButton)`
   width: 10%;
+  &:disabled {
+    background: var(--disabled);
+  }
 `;

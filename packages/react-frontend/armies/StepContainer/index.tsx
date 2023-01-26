@@ -42,11 +42,13 @@ const StepContainer = ({ step }: Props) => {
               copy="<"
               ariaLabel="Moves phase left one"
               onClick={() => handleReorder(-1)}
+              disabled={isLoading}
             />
             <Styled.ReOrderButton
               copy=">"
               ariaLabel="Moves phase right one"
               onClick={() => handleReorder(1)}
+              disabled={isLoading}
             />
             <Styled.DeleteButton copy="Delete phase" onClick={handleDelete} />
           </>

@@ -48,6 +48,7 @@ const RuleContainer = ({ rule, first = false, last = false }: Props) => {
                 copy="^"
                 ariaLabel="Moves rule up one"
                 onClick={() => handleReorder(-1)}
+                disabled={isLoading}
               />
             )}
             {!last && (
@@ -55,6 +56,7 @@ const RuleContainer = ({ rule, first = false, last = false }: Props) => {
                 copy="⌄"
                 ariaLabel="Moves rule down one"
                 onClick={() => handleReorder(1)}
+                disabled={isLoading}
               />
             )}
             <Styled.DeleteButton copy="Delete rule" onClick={handleDelete} />
