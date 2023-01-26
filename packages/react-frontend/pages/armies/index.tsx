@@ -7,7 +7,7 @@ import { useGeneralStore } from "@store/general";
 import * as Styled from "./armies.styled";
 
 const Armies = () => {
-  const { armies, armiesFetched } = useArmies();
+  const { alphabeticalArmies: armies, armiesFetched } = useArmies();
   const openModal = useGeneralStore((state) => state.openModal);
   useHeading({ heading: "Your Armies" });
 
@@ -18,7 +18,7 @@ const Armies = () => {
   return (
     <LayoutWrapper>
       <Styled.SectionWrapper>
-        {Object.entries(armies).map(([id, army]) => {
+        {armies.map(([id, army]) => {
           return <ArmyPreview id={id} army={army} key={`army-${id}`} />;
         })}
         <Styled.NewArmyButton

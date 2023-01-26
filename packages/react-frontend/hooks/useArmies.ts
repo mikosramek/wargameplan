@@ -1,5 +1,5 @@
 import { orderSort } from "@utils/general";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
 import { useApi } from "./useApi";
@@ -19,6 +19,17 @@ const useArmies = () => {
     (state) => state.updateCurrentArmyStepRule
   );
   const armies = useArmiesStore((state) => state.armies);
+
+  const alphabeticalArmies = useMemo(() => {
+    return Object.entries(armies).sort((a, b) => {
+      const [_a, aArmy] = a;
+      const [_b, bArmy] = b;
+      if (aArmy.name > bArmy.name) return 1;
+      else if (aArmy.name < bArmy.name) return -1;
+      else return 0;
+    });
+  }, [armies]);
+
   const armiesFetched = useArmiesStore((state) => state.armiesFetched);
   const isLoggedIn = useAccountStore((state) => state.isLoggedIn);
 
@@ -111,6 +122,7 @@ const useArmies = () => {
 
   return {
     armies,
+    alphabeticalArmies,
     armiesFetched,
     handleArmyFetch,
     deleteRule,
