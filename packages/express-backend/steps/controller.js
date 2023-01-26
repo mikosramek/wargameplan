@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Step = require("./schema");
 
 orderSort = (a, b) => {
@@ -46,6 +47,70 @@ class StepController {
       callback(null, step);
     });
   }
+
+  moveStep({ stepId, direction, armyId }, callback) {
+    // find all steps for this army + sort by order
+    // find index of step that matches stepId
+    // based on direction, update order # for step + step in direction
+    Step.find({ armyId }).exec((err, steps) => {
+      if (err) callback(err);
+
+      steps.sort(orderSort);
+      const stepIndex = steps.findIndex(({ _id }) => _id.toString() === stepId);
+
+      if (stepIndex < 0) return callback(new Error("Step not found on army"));
+
+      const stepToUpdate = steps[stepIndex];
+      let otherStepIndex;
+
+      if (direction === -1) {
+        if (stepIndex === 0) {
+          otherStepIndex = steps.length - 1;
+        } else {
+          otherStepIndex = stepIndex - 1;
+        }
+      } else if (direction === 1) {
+        if (stepIndex === steps.length - 1) {
+          otherStepIndex = 0;
+        } else {
+          otherStepIndex = stepIndex + 1;
+        }
+      }
+      const otherStep = steps[otherStepIndex];
+      const stepOrder = stepToUpdate.order;
+
+      stepToUpdate.order = otherStep.order;
+      otherStep.order = stepOrder;
+
+      let session;
+      mongoose
+        .startSession()
+        .then((_session) => {
+          session = _session;
+          session.startTransaction();
+        })
+        .then(() => {
+          stepToUpdate.save();
+          otherStep.save();
+        })
+        .then(() => {
+          session.endSession();
+          callback(null, {
+            armyId,
+            movedStep: {
+              id: stepToUpdate._id,
+              order: stepToUpdate.order,
+            },
+            shiftedStep: {
+              id: otherStep._id,
+              order: otherStep.order,
+            },
+          });
+        })
+        .catch(console.error);
+    });
+  }
+
   createRule({ stepId, name, text }, callback) {
     Step.findById(stepId, (err, step) => {
       if (err) callback(err);

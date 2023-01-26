@@ -55,4 +55,29 @@ router.delete("/remove", (req, res) => {
   });
 });
 
+router.patch("/order", (req, res) => {
+  const { stepId, armyId, direction } = req.body;
+  const { accountid: accountId } = req.headers;
+
+  if (!stepId || !armyId)
+    return res.status(400).send("Required data is missing");
+
+  if (Math.abs(direction) !== 1)
+    return res.status(400).send("direction missing or invalid");
+
+  ArmyController.validateOwner({ armyId, accountId }, (isOwner) => {
+    if (!isOwner) return res.status(403).send("Army not owned by account.");
+
+    StepsController.moveStep(
+      { stepId, direction: parseInt(direction), armyId },
+      (err, updatedSteps) => {
+        if (err) {
+          return res.status(500).send(err.message);
+        }
+        return res.status(200).send(updatedSteps);
+      }
+    );
+  });
+});
+
 module.exports = router;
