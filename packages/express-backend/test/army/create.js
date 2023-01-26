@@ -27,7 +27,7 @@ describe("Army - Create", () => {
     });
     it("is owned by the proper account", (done) => {
       ArmyController.validateOwner(
-        { armyId: army._id, accountId: account._id },
+        { armyId: army.id, accountId: account._id },
         (isOwner) => {
           assert(isOwner);
           done();

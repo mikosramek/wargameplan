@@ -15,7 +15,7 @@ cleanAndSortRules = (rules) => {
   }));
 };
 
-const transact = (actionFunction, callback) => {
+const transact = (actionFunction, callback, error) => {
   let session;
   mongoose
     .startSession()
@@ -28,7 +28,7 @@ const transact = (actionFunction, callback) => {
       session.endSession();
       callback();
     })
-    .catch(console.error);
+    .catch(error);
 };
 
 class StepController {
@@ -66,6 +66,10 @@ class StepController {
   }
 
   moveStep({ stepId, direction, armyId }, callback) {
+    armyId = armyId.toString();
+    stepId = stepId.toString();
+    direction = parseInt(direction);
+
     Step.find({ armyId }).exec((err, steps) => {
       if (err) callback(err);
 
@@ -102,7 +106,7 @@ class StepController {
           otherStep.save();
         },
         () => {
-          callback(null, {
+          return callback(null, {
             armyId,
             movedStep: {
               id: stepToUpdate._id,
@@ -113,7 +117,8 @@ class StepController {
               order: otherStep.order,
             },
           });
-        }
+        },
+        (e) => callback(e)
       );
     });
   }
