@@ -33,5 +33,3 @@ app.use("/api/v1/steps", require("./steps/routes"));
 app.use("/api/v1/rules", require("./steps/rulesRoutes"));
 
 app.listen(3000);
-
-module.exports = db;
