@@ -1,6 +1,7 @@
+import { reorderStepResponse } from "hooks/useApi";
 import { cloneDeep } from "lodash";
 import create from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 
 export type Army = {
   name: string;
@@ -35,6 +36,7 @@ interface State {
   addArmy: (army: UnParsedArmy) => void;
   removeArmy: (armyId: string) => void;
   updateArmySteps: (armyId: string, steps: Record<string, ArmySteps>) => void;
+  updateArmyStepOrder: (update: reorderStepResponse) => void;
   updateCurrentArmyStep: (stepId: string, steps: ArmySteps) => void;
   updateCurrentArmyStepRule: (stepId: string, rules: ArmyRule[]) => void;
   removeCurrentArmyStep: (stepId: string) => void;
@@ -123,6 +125,32 @@ export const useArmiesStore = create<State>()(
           false,
           "update/army"
         ),
+      updateArmyStepOrder: (update: reorderStepResponse) =>
+        set((state: State) => {
+          const currentArmy = state.armies[update.armyId];
+          const movedStep = currentArmy.steps[update.movedStep.id];
+          const shiftedStep = currentArmy.steps[update.shiftedStep.id];
+
+          return {
+            armies: {
+              ...state.armies,
+              [update.armyId]: {
+                ...currentArmy,
+                steps: {
+                  ...currentArmy.steps,
+                  [movedStep.id]: {
+                    ...movedStep,
+                    order: update.movedStep.order,
+                  },
+                  [shiftedStep.id]: {
+                    ...shiftedStep,
+                    order: update.shiftedStep.order,
+                  },
+                },
+              },
+            },
+          };
+        }),
       updateCurrentArmyStep: (stepId, step) =>
         set((state: State) => {
           const currentArmyId = state.currentArmyId;
