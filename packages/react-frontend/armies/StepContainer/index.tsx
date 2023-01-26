@@ -4,6 +4,7 @@ import * as Styled from "./StepContainer.styled";
 import { useGeneralStore } from "@store/general";
 import useArmies from "hooks/useArmies";
 import { useCallback } from "react";
+import { StepsControlBar } from "@armies/StepsControlBar";
 
 type Props = {
   step: ArmySteps;
@@ -42,8 +43,13 @@ const StepContainer = ({ step }: Props) => {
         )}
       </Styled.HeadingWrapper>
       <Styled.InnerWrapper>
-        {step.rules.map((rule) => (
-          <RuleContainer key={`rule-${rule.id}`} rule={rule} />
+        {step.rules.map((rule, index) => (
+          <RuleContainer
+            key={`rule-${rule.id}`}
+            rule={rule}
+            first={index === 0}
+            last={index === step.rules.length - 1}
+          />
         ))}
         {editorMode && (
           <Styled.NewRuleButton

@@ -2,11 +2,11 @@ import { orderSort } from "@utils/general";
 import { useEffect, useMemo } from "react";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
-import { useApi } from "./useApi";
+import { Direction, useApi } from "./useApi";
 import { useLog } from "./useLog";
 
 const useArmies = () => {
-  const { getters, deleters, posters } = useApi();
+  const { getters, deleters, posters, patchers } = useApi();
   const { log, error } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const addArmy = useArmiesStore((state) => state.addArmy);
@@ -82,12 +82,35 @@ const useArmies = () => {
     }
   };
 
+  const moveRule = async (id: string, direction: Direction) => {
+    log("MOVING RULE", id, direction);
+    try {
+      const response = await patchers.reorderRule(id, direction);
+      if (response && !(response instanceof Error)) {
+        updateCurrentArmyStepRule(response.stepId, response.rules);
+      }
+    } catch (e) {
+      error(e);
+    }
+  };
+
   const deleteStep = async (id: string) => {
     log("DELETING CURRENT STEP");
     try {
       const response = await deleters.deleteStep(id);
       if (response && !(response instanceof Error)) {
         removeCurrentArmyStep(response.stepIdRemoved);
+      }
+    } catch (e) {
+      error(e);
+    }
+  };
+
+  const moveStep = async (id: string, direction: Direction) => {
+    log("MOVING STEP", id, direction);
+    try {
+      const response = await patchers.reorderStep(id, direction);
+      if (response && !(response instanceof Error)) {
       }
     } catch (e) {
       error(e);
@@ -126,6 +149,7 @@ const useArmies = () => {
     armiesFetched,
     handleArmyFetch,
     deleteRule,
+    moveRule,
     deleteStep,
     createArmy,
     deleteArmy,

@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash";
 import create from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 
 export type Army = {
   name: string;

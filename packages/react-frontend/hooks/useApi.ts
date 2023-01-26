@@ -26,12 +26,19 @@ export const ENDPOINTS = {
     step: "/v1/steps/remove",
     army: "/v1/armies/remove",
   },
+  patch: {
+    step: "/v1/steps/order",
+    rule: "/v1/rules/order",
+  },
 };
 type urlGetterType = keyof typeof ENDPOINTS.get;
 type urlPosterType = keyof typeof ENDPOINTS.post;
 type urlDeleteType = keyof typeof ENDPOINTS.delete;
+type urlPatchType = keyof typeof ENDPOINTS.patch;
 
 type LoginResponse = { id: string; email: string; approved: boolean };
+
+export type Direction = -1 | 1;
 
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
@@ -53,6 +60,10 @@ export const useApi = () => {
 
   const getDeleteUrl = useCallback((type: urlDeleteType) => {
     return `${API_BASE}${ENDPOINTS.delete[type]}`;
+  }, []);
+
+  const getPatchUrl = useCallback((type: urlPatchType) => {
+    return `${API_BASE}${ENDPOINTS.patch[type]}`;
   }, []);
 
   const getArmies = useCallback(() => {
@@ -160,6 +171,31 @@ export const useApi = () => {
     [currentArmyId, headers]
   );
 
+  type movedStep = {
+    id: string;
+    order: number;
+  };
+
+  type reorderStepResponse = {
+    armyId: string;
+    movedStep: movedStep;
+    shiftedStep: movedStep;
+  };
+
+  const reorderStep = useCallback(
+    (stepId: string, direction: Direction) => {
+      const url = getPatchUrl("step");
+      return new Promise<reorderStepResponse | Error | null>((res, rej) => {
+        if (!accountId) return null;
+        axios
+          .patch(url, { stepId, armyId: currentArmyId, direction }, { headers })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [currentArmyId, headers]
+  );
+
   type postNewRuleProps = {
     name: string;
     text: string;
@@ -200,7 +236,25 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getDeleteUrl, accountId, headers]
+    [getDeleteUrl, accountId, headers, currentStepId, currentArmyId]
+  );
+
+  const reorderRule = useCallback(
+    (ruleId: string, direction: Direction) => {
+      const url = getPatchUrl("rule");
+      return new Promise<ruleResponseType | Error | null>((res, rej) => {
+        if (!accountId) return null;
+        axios
+          .patch(
+            url,
+            { stepId: currentStepId, ruleId, direction, armyId: currentArmyId },
+            { headers }
+          )
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [getPatchUrl, accountId, headers, currentStepId, currentArmyId]
   );
 
   const login = useCallback(
@@ -223,5 +277,6 @@ export const useApi = () => {
     getters: { getArmies, getArmySteps },
     posters: { postNewArmy, postNewStep, postNewRule },
     deleters: { deleteArmy, deleteStep, deleteRule },
+    patchers: { reorderStep, reorderRule },
   };
 };
