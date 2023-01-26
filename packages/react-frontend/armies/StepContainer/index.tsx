@@ -3,8 +3,9 @@ import RuleContainer from "@armies/RuleContainer";
 import * as Styled from "./StepContainer.styled";
 import { useGeneralStore } from "@store/general";
 import useArmies from "hooks/useArmies";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { StepsControlBar } from "@armies/StepsControlBar";
+import { Direction } from "hooks/useApi";
 
 type Props = {
   step: ArmySteps;
@@ -13,14 +14,23 @@ type Props = {
 const StepContainer = ({ step }: Props) => {
   const editorMode = useGeneralStore((state) => state.editorMode);
   const openModal = useGeneralStore((state) => state.openModal);
-  const { deleteStep } = useArmies();
+  const { deleteStep, moveStep } = useArmies();
 
   const handleDelete = useCallback(() => {
     const confirmation = confirm(`Delete the "${step.name}" step?`);
     if (confirmation) deleteStep(step.id);
   }, [step]);
 
-  const handleReorder = useCallback((direction: number) => {}, [step]);
+  const [isLoading, setLoading] = useState(false);
+  const handleReorder = useCallback(
+    (direction: Direction) => {
+      if (isLoading) return;
+      setLoading(true);
+      moveStep(step.id, direction);
+      setLoading(false);
+    },
+    [step, isLoading]
+  );
 
   return (
     <Styled.Wrapper>

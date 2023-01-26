@@ -12,6 +12,9 @@ const useArmies = () => {
   const addArmy = useArmiesStore((state) => state.addArmy);
   const removeArmy = useArmiesStore((state) => state.removeArmy);
   const updateArmySteps = useArmiesStore((state) => state.updateArmySteps);
+  const updateArmyStepOrder = useArmiesStore(
+    (state) => state.updateArmyStepOrder
+  );
   const removeCurrentArmyStep = useArmiesStore(
     (state) => state.removeCurrentArmyStep
   );
@@ -111,6 +114,7 @@ const useArmies = () => {
     try {
       const response = await patchers.reorderStep(id, direction);
       if (response && !(response instanceof Error)) {
+        updateArmyStepOrder(response);
       }
     } catch (e) {
       error(e);
@@ -122,7 +126,6 @@ const useArmies = () => {
     try {
       const response = await posters.postNewArmy(armyName);
       if (response && !(response instanceof Error)) {
-        // add new army to store
         addArmy(response);
       }
     } catch (e) {
@@ -135,7 +138,6 @@ const useArmies = () => {
     try {
       const response = await deleters.deleteArmy(armyId);
       if (response && !(response instanceof Error)) {
-        // remove army from store
         removeArmy(response.armyId);
       }
     } catch (e) {
@@ -150,6 +152,7 @@ const useArmies = () => {
     handleArmyFetch,
     deleteRule,
     moveRule,
+    moveStep,
     deleteStep,
     createArmy,
     deleteArmy,

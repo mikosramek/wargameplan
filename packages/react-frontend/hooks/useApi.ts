@@ -40,6 +40,17 @@ type LoginResponse = { id: string; email: string; approved: boolean };
 
 export type Direction = -1 | 1;
 
+type movedStep = {
+  id: string;
+  order: number;
+};
+
+export type reorderStepResponse = {
+  armyId: string;
+  movedStep: movedStep;
+  shiftedStep: movedStep;
+};
+
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
   //   const session = useAccountStore((state) => state.session); // TODO: some sort of session validation
@@ -170,17 +181,6 @@ export const useApi = () => {
     },
     [currentArmyId, headers]
   );
-
-  type movedStep = {
-    id: string;
-    order: number;
-  };
-
-  type reorderStepResponse = {
-    armyId: string;
-    movedStep: movedStep;
-    shiftedStep: movedStep;
-  };
 
   const reorderStep = useCallback(
     (stepId: string, direction: Direction) => {

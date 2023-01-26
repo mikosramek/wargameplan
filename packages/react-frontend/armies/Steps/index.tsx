@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import StepContainer from "@armies/StepContainer";
 import { StepsControlBar } from "@armies/StepsControlBar";
 import { useLog } from "hooks/useLog";
+import { orderSort } from "@utils/general";
 type Props = {
   steps: Record<string, ArmySteps>;
 };
@@ -11,7 +12,7 @@ type Props = {
 const StepsPage = ({ steps }: Props) => {
   const { log } = useLog();
   const parsedSteps = useMemo(() => {
-    return Object.values(steps);
+    return Object.values(steps).sort(orderSort);
   }, [steps]);
   const setCurrentStepId = useArmiesStore((state) => state.setCurrentStepId);
   const [currentStep, setCurrentStep] = useState<ArmySteps | null>(null);
