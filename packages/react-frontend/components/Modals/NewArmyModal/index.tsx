@@ -3,7 +3,7 @@ import { Input } from "@components/Form/Input";
 import { useApi } from "hooks/useApi";
 import { useInput, BaseInputs } from "hooks/form/useInput";
 import * as Styled from "./NewArmyModal.styled";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useLog } from "hooks/useLog";
 import useArmies from "hooks/useArmies";
 
@@ -17,33 +17,31 @@ const baseInputs = {
 } satisfies BaseInputs;
 
 export const NewArmyModal = () => {
-  const { posters } = useApi();
   const { createArmy } = useArmies();
   const { error } = useLog();
   const closeModal = useGeneralStore((state) => state.closeModal);
+  const [isLoading, setLoading] = useState(false);
 
   const { inputs, handleInputChange, validateInputs } = useInput({
     baseInputs,
   });
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const form = inputs as typeof baseInputs;
       const isFormValid = validateInputs();
       if (!isFormValid) return;
-
-      createArmy(form.armyName.val);
-      closeModal();
-      //   posters
-      //     .postNewStep({ stepName: form.stepName.val })
-      //     .then((newArmy) => {
-      //       if (newArmy && !(newArmy instanceof Error)) {
-      //         closeModal();
-      //         console.log({ newArmy });
-      //       }
-      //     })
-      //     .catch(error);
+      try {
+        setLoading(true);
+        await createArmy(form.armyName.val);
+        closeModal();
+      } catch (e) {
+        // TODO: error state
+        error(e);
+      } finally {
+        setLoading(false);
+      }
     },
     [inputs]
   );
@@ -62,7 +60,7 @@ export const NewArmyModal = () => {
           />
         );
       })}
-      <Styled.Button>Submit</Styled.Button>
+      <Styled.Button disabled={isLoading}>Submit</Styled.Button>
     </Styled.Form>
   );
 };

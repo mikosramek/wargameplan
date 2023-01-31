@@ -1,11 +1,11 @@
-import { useInput, BaseInputs } from "hooks/form/useInput";
+import { useCallback, useState } from "react";
 import { useArmiesStore } from "@store/armies";
 import { useGeneralStore } from "@store/general";
+import { useInput, BaseInputs } from "hooks/form/useInput";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
-import { useCallback, useState } from "react";
-import * as Styled from "./NewRuleModal.styled";
 import { Input } from "@components/Form/Input";
+import * as Styled from "./NewRuleModal.styled";
 
 const baseInputs = {
   ruleName: {
@@ -30,10 +30,10 @@ export const NewRuleModal = () => {
     (state) => state.updateCurrentArmyStepRule
   );
   const closeModal = useGeneralStore((state) => state.closeModal);
-
   const { inputs, handleInputChange, validateInputs } = useInput({
     baseInputs,
   });
+  const [isLoading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,6 +41,7 @@ export const NewRuleModal = () => {
       const isFormValid = validateInputs();
       if (!isFormValid) return;
       const form = inputs as typeof baseInputs;
+      setLoading(true);
       posters
         .postNewRule({
           name: form.ruleName.val,
@@ -52,7 +53,10 @@ export const NewRuleModal = () => {
             updateCurrentArmyStepRule(updatedSteps.stepId, updatedSteps.rules);
           }
         })
-        .catch(error);
+        .catch(error)
+        .finally(() => {
+          setLoading(false);
+        });
     },
     [inputs, posters]
   );
@@ -73,7 +77,9 @@ export const NewRuleModal = () => {
           );
         }
       )}
-      <Styled.Button type="submit">Submit</Styled.Button>
+      <Styled.Button disabled={isLoading} type="submit">
+        Submit
+      </Styled.Button>
     </Styled.Form>
   );
 };

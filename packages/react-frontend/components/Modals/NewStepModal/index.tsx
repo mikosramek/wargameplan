@@ -1,11 +1,11 @@
+import { useCallback, useState } from "react";
 import { useInput, BaseInputs } from "hooks/form/useInput";
-import { Input } from "@components/Form/Input";
-import { useCallback } from "react";
-import * as Styled from "./NewStepModal.styled";
 import { useApi } from "hooks/useApi";
+import { useLog } from "hooks/useLog";
+import { Input } from "@components/Form/Input";
 import { useGeneralStore } from "@store/general";
 import { useArmiesStore } from "@store/armies";
-import { useLog } from "hooks/useLog";
+import * as Styled from "./NewStepModal.styled";
 
 const baseInputs = {
   stepName: {
@@ -26,6 +26,7 @@ export const NewStepModal = () => {
   const { inputs, handleInputChange, validateInputs } = useInput({
     baseInputs,
   });
+  const [isLoading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,6 +35,7 @@ export const NewStepModal = () => {
       const isFormValid = validateInputs();
       if (!isFormValid) return;
 
+      setLoading(true);
       posters
         .postNewStep({ stepName: form.stepName.val })
         .then((updatedSteps) => {
@@ -42,7 +44,10 @@ export const NewStepModal = () => {
             updateCurrentArmyStep(updatedSteps.step.id, updatedSteps.step);
           }
         })
-        .catch(error);
+        .catch(error)
+        .finally(() => {
+          setLoading(false);
+        });
     },
     [inputs]
   );
@@ -61,7 +66,7 @@ export const NewStepModal = () => {
           />
         );
       })}
-      <Styled.Button>Submit</Styled.Button>
+      <Styled.Button disabled={isLoading}>Submit</Styled.Button>
     </Styled.Form>
   );
 };
