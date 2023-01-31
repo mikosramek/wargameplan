@@ -63,6 +63,12 @@ const StepContainer = ({ step }: Props) => {
             last={index === step.rules.length - 1}
           />
         ))}
+        {step.rules.length === 0 && (
+          <Styled.EmptyContainer>
+            <Styled.EmptyTitle>No rules</Styled.EmptyTitle>
+            <Styled.EmptyCopy>Use edit mode to add a rule</Styled.EmptyCopy>
+          </Styled.EmptyContainer>
+        )}
         {editorMode && (
           <Styled.NewRuleButton
             aria-label="Opens a modal to add a new rule"

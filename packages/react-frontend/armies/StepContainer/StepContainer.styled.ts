@@ -49,3 +49,21 @@ export const NewRuleButton = styled.button`
   border-top: 1px solid var(--border);
   font-size: 24px;
 `;
+
+export const EmptyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 15px;
+`;
+
+export const EmptyTitle = styled.h3`
+  margin: 0;
+  margin-right: 10px;
+`;
+
+export const EmptyCopy = styled.p`
+  margin: 0;
+  position: relative;
+  top: 1px;
+  opacity: 0.7;
+`;

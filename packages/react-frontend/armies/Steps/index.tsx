@@ -5,6 +5,8 @@ import StepContainer from "@armies/StepContainer";
 import { StepsControlBar } from "@armies/StepsControlBar";
 import { useLog } from "hooks/useLog";
 import { orderSort } from "@utils/general";
+import * as Styled from "./Steps.styled";
+
 type Props = {
   steps: Record<string, ArmySteps>;
 };
@@ -43,6 +45,12 @@ const StepsPage = ({ steps }: Props) => {
         nextStep={increaseCounter}
       />
       {!!currentStep && <StepContainer step={currentStep} />}
+      {!currentStep && (
+        <Styled.EmptyContainer>
+          <Styled.EmptyTitle>No phases</Styled.EmptyTitle>
+          <Styled.EmptyCopy>Use edit mode to add a phase</Styled.EmptyCopy>
+        </Styled.EmptyContainer>
+      )}
     </>
   );
 };
