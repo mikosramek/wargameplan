@@ -6,7 +6,10 @@ class AccountController {
     const newAccount = new Account(account);
     newAccount.save((err) => {
       if (err) callback(err);
-      else callback(null, newAccount);
+      else {
+        const { _id: id, approved, email } = newAccount;
+        callback(null, { id, approved, email });
+      }
     });
   }
   delete(id, callback) {
