@@ -5,6 +5,7 @@ import { useLog } from "./useLog";
 
 type AuthChecker = {
   route: string;
+  routeExceptions?: string[];
   valueToCheck: keyof State;
   valueCheck: (value: any) => boolean;
   redirectTo: string;
@@ -17,6 +18,13 @@ const authMap = [
   //     valueCheck: (value: any) => !value,
   //     redirectTo: "/verify",
   //   },
+  // logged in, don't allow signup
+  {
+    route: "/signup",
+    valueToCheck: "isLoggedIn",
+    valueCheck: (value: any) => !!value,
+    redirectTo: "/armies",
+  },
   {
     // logged in, skip the base page
     route: "/",
@@ -27,6 +35,7 @@ const authMap = [
   {
     // not logged in, redirect to base login page
     route: "*",
+    routeExceptions: ["/signup"],
     valueToCheck: "isLoggedIn",
     valueCheck: (value: any) => !value,
     redirectTo: "/",
@@ -41,8 +50,10 @@ export const useAuth = () => {
   useEffect(() => {
     if (!currentRoute) return;
     log({ currentRoute });
-    const checks = authMap.filter(({ route, redirectTo }) => {
+    const checks = authMap.filter(({ route, redirectTo, routeExceptions }) => {
       if (redirectTo === currentRoute) return false;
+      else if (routeExceptions && routeExceptions.includes(currentRoute))
+        return false;
       else if (route === "*" || route === currentRoute) return true;
       else return false;
     });

@@ -1,25 +1,52 @@
-import { useCallback, useReducer, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import Router from "next/router";
 import * as Styled from "./SignupForm.styled";
 import { Input } from "@components/Form/Input";
 import { IS_DEV } from "@utils/config";
 import { MainButton } from "@components/MainButton";
+import { useApi } from "hooks/useApi";
+import { useAccountStore } from "@store/account";
+import { useLog } from "hooks/useLog";
 
 export const SignupForm = () => {
-  const [email, setEmail] = useState(IS_DEV ? "email" : "");
+  const { signUp } = useApi();
+  const { error } = useLog();
+  const logUserIn = useAccountStore((state) => state.login);
+  const [email, setEmail] = useState(
+    IS_DEV ? `miko-${Math.floor(Math.random() * 10)}@mikosramek.ca` : ""
+  );
   const [password, setPassword] = useState(IS_DEV ? "password" : "");
   const [showPassword, toggleShowPassword] = useReducer((val) => !val, false);
+
+  const [apiError, setApiError] = useState("");
+  const errorRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      // login({ email, password })
-      //   .then((account) => {
-      //     if (!(account instanceof Error)) {
-      //       logUserIn(account.id, account.email, account.approved);
-      //       Router.push("/armies");
-      //     }
-      //   })
-      //   .catch(error);
+      setApiError("");
+      signUp({ email, password })
+        .then((account) => {
+          if (account && !(account instanceof Error)) {
+            logUserIn({
+              id: account.id,
+              session: "",
+              isVerified: account.approved,
+            });
+            Router.push("/armies");
+          }
+        })
+        .catch((e) => {
+          error(e);
+          setApiError(e.response.data);
+          if (errorRef.current) errorRef.current.focus();
+        });
     },
     [email, password]
   );
@@ -56,6 +83,7 @@ export const SignupForm = () => {
         />
       </Styled.ToggleWrapper>
       <MainButton copy="Sign up" />
+      <Styled.Error ref={errorRef}>{apiError}</Styled.Error>
     </Styled.Form>
   );
 };

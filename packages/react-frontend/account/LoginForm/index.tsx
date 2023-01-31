@@ -21,7 +21,11 @@ export const LoginForm = () => {
       login({ email, password })
         .then((account) => {
           if (!(account instanceof Error)) {
-            logUserIn(account.id, account.email, account.approved);
+            logUserIn({
+              id: account.id,
+              session: "",
+              isVerified: account.approved,
+            });
             Router.push("/armies");
           }
         })

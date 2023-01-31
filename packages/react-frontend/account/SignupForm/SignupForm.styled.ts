@@ -27,3 +27,9 @@ export const ToggleWrapper = styled.div`
     cursor: pointer;
   }
 `;
+
+export const Error = styled.p`
+  color: var(--impact);
+  margin-bottom: 0;
+  text-align: center;
+`;

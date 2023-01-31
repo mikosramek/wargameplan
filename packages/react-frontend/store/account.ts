@@ -6,7 +6,16 @@ export interface State {
   accountId: string | null;
   session: string | null;
   isVerified: boolean;
-  login: (id: string, session: string, isVerified: boolean) => void;
+  login: ({
+    id,
+    session,
+    isVerified,
+  }: {
+    id: string;
+    session: string;
+    isVerified: boolean;
+  }) => void;
+  logout: () => void;
 }
 
 export const useAccountStore = create<State>()(
@@ -17,7 +26,7 @@ export const useAccountStore = create<State>()(
         accountId: null,
         session: null,
         isVerified: false,
-        login: (id, session, isVerified) =>
+        login: ({ id, session, isVerified }) =>
           set(
             () => ({
               isLoggedIn: true,
@@ -28,6 +37,13 @@ export const useAccountStore = create<State>()(
             false,
             "account/login"
           ),
+        logout: () =>
+          set({
+            isLoggedIn: false,
+            accountId: null,
+            session: null,
+            isVerified: false,
+          }),
       }),
       {
         name: "account-state",
