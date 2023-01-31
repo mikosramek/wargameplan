@@ -27,8 +27,8 @@ const useArmies = () => {
     return Object.entries(armies).sort((a, b) => {
       const [_a, aArmy] = a;
       const [_b, bArmy] = b;
-      if (aArmy.name > bArmy.name) return 1;
-      else if (aArmy.name < bArmy.name) return -1;
+      if (aArmy.name.toLowerCase() > bArmy.name.toLowerCase()) return 1;
+      else if (aArmy.name.toLowerCase() < bArmy.name.toLowerCase()) return -1;
       else return 0;
     });
   }, [armies]);
