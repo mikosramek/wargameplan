@@ -21,7 +21,11 @@ export const LoginForm = () => {
       login({ email, password })
         .then((account) => {
           if (!(account instanceof Error)) {
-            logUserIn(account.id, account.email, account.approved);
+            logUserIn({
+              id: account.id,
+              session: "",
+              isVerified: account.approved,
+            });
             Router.push("/armies");
           }
         })
@@ -38,14 +42,15 @@ export const LoginForm = () => {
         inputName="email"
         label="Email"
         value={email}
-        onChange={setEmail}
+        onChange={(_i, val) => setEmail(val)}
       />
       <Input
         type="password"
-        inputName="password"
+        inputName="current-password"
         label="Password"
         value={password}
-        onChange={setPassword}
+        onChange={(_i, val) => setPassword(val)}
+        autocomplete="current-password"
       />
       <MainButton copy="Login" />
     </Styled.Form>

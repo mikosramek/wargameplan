@@ -257,6 +257,19 @@ export const useApi = () => {
     [getPatchUrl, accountId, headers, currentStepId, currentArmyId]
   );
 
+  const signUp = useCallback(
+    ({ email, password }: { email: string; password: string }) => {
+      const url = getPostUrl("account");
+      return new Promise<LoginResponse | Error>((res, rej) => {
+        axios
+          .post(url, { email, password })
+          .then(({ data }) => res(data))
+          .catch(rej);
+      });
+    },
+    [getPostUrl]
+  );
+
   const login = useCallback(
     ({ email, password }: { email: string; password: string }) => {
       const url = getGetUrl("account");
@@ -273,6 +286,7 @@ export const useApi = () => {
   );
 
   return {
+    signUp,
     login,
     getters: { getArmies, getArmySteps },
     posters: { postNewArmy, postNewStep, postNewRule },

@@ -23,7 +23,10 @@ router.post("/create", (req, res) => {
   AccountController.create({ email, password }, (err, newAccount) => {
     if (err) {
       console.error(err);
-      return res.status(403).send(err);
+      if (err.code === 11000) {
+        return res.status(403).send("Email already in use");
+      }
+      return res.status(403).send("An error occurred");
     }
 
     res.status(201).send(newAccount);

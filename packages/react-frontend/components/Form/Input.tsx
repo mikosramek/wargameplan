@@ -5,9 +5,12 @@ type Props = {
   inputName: string;
   label: string;
   type?: HTMLInputTypeAttribute;
-  value: string;
+  value?: string;
   onChange: (name: any, input: string) => void;
   errorMessage?: string;
+  autocomplete?: string;
+  required?: boolean;
+  checked?: boolean;
 };
 
 export const Input = ({
@@ -17,6 +20,9 @@ export const Input = ({
   value,
   onChange,
   errorMessage,
+  autocomplete,
+  required = false,
+  checked = false,
 }: Props) => {
   return (
     <>
@@ -33,6 +39,8 @@ export const Input = ({
           value={value}
           onChange={(e) => onChange(inputName, e.target.value)}
           aria-invalid={!!errorMessage}
+          autoComplete={autocomplete}
+          required={required}
         />
       )}
       {type !== "textarea" && (
@@ -43,6 +51,9 @@ export const Input = ({
           value={value}
           onChange={(e) => onChange(inputName, e.target.value)}
           aria-invalid={!!errorMessage}
+          autoComplete={autocomplete}
+          required={required}
+          checked={checked}
         />
       )}
     </>

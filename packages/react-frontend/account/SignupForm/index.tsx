@@ -1,10 +1,89 @@
+import {
+  MutableRefObject,
+  useCallback,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import Router from "next/router";
+import * as Styled from "./SignupForm.styled";
+import { Input } from "@components/Form/Input";
+import { IS_DEV } from "@utils/config";
+import { MainButton } from "@components/MainButton";
+import { useApi } from "hooks/useApi";
+import { useAccountStore } from "@store/account";
+import { useLog } from "hooks/useLog";
+
 export const SignupForm = () => {
+  const { signUp } = useApi();
+  const { error } = useLog();
+  const logUserIn = useAccountStore((state) => state.login);
+  const [email, setEmail] = useState(
+    IS_DEV ? `miko-${Math.floor(Math.random() * 10)}@mikosramek.ca` : ""
+  );
+  const [password, setPassword] = useState(IS_DEV ? "password" : "");
+  const [showPassword, toggleShowPassword] = useReducer((val) => !val, false);
+
+  const [apiError, setApiError] = useState("");
+  const errorRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setApiError("");
+      signUp({ email, password })
+        .then((account) => {
+          if (account && !(account instanceof Error)) {
+            logUserIn({
+              id: account.id,
+              session: "",
+              isVerified: account.approved,
+            });
+            Router.push("/armies");
+          }
+        })
+        .catch((e) => {
+          error(e);
+          setApiError(e.response.data);
+          if (errorRef.current) errorRef.current.focus();
+        });
+    },
+    [email, password]
+  );
+
   return (
-    <form>
-      <label htmlFor="email">Email</label>
-      <input type="email" name="email" id="email" />
-      <label htmlFor="password">Password</label>
-      <input type="password" name="password" id="password" />
-    </form>
+    <Styled.Form onSubmit={handleSubmit}>
+      <Styled.Title>Sign up</Styled.Title>
+      <Input
+        type="email"
+        inputName="email"
+        label="Email"
+        value={email}
+        onChange={(_i, val) => setEmail(val)}
+        required
+        autocomplete="email"
+      />
+      <Input
+        type={showPassword ? "text" : "password"}
+        inputName="new-password"
+        label="Password"
+        value={password}
+        onChange={(_i, val) => setPassword(val)}
+        autocomplete="new-password"
+        required
+      />
+      <Styled.ToggleWrapper>
+        <Input
+          type="checkbox"
+          inputName="showPassword"
+          label="Show Password"
+          checked={showPassword}
+          onChange={toggleShowPassword}
+          aria-label="Show password as plain text. Warning: this will display your password on the screen."
+        />
+      </Styled.ToggleWrapper>
+      <MainButton copy="Sign up" />
+      <Styled.Error ref={errorRef}>{apiError}</Styled.Error>
+    </Styled.Form>
   );
 };
