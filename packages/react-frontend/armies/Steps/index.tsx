@@ -23,6 +23,8 @@ const StepsPage = ({ steps }: Props) => {
     maxCount: parsedSteps.length - 1,
   });
 
+  const stepCount = parsedSteps.length;
+
   useEffect(() => {
     const step = parsedSteps[counter];
     if (!!step) {
@@ -44,7 +46,9 @@ const StepsPage = ({ steps }: Props) => {
         previousStep={decreaseCounter}
         nextStep={increaseCounter}
       />
-      {!!currentStep && <StepContainer step={currentStep} />}
+      {!!currentStep && (
+        <StepContainer step={currentStep} stepCount={stepCount} />
+      )}
       {!currentStep && (
         <Styled.EmptyContainer>
           <Styled.EmptyTitle>No phases</Styled.EmptyTitle>

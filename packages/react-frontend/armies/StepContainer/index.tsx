@@ -4,17 +4,21 @@ import * as Styled from "./StepContainer.styled";
 import { useGeneralStore } from "@store/general";
 import useArmies from "hooks/useArmies";
 import { useCallback, useState } from "react";
-import { StepsControlBar } from "@armies/StepsControlBar";
 import { Direction } from "hooks/useApi";
+import { useLog } from "hooks/useLog";
 
 type Props = {
   step: ArmySteps;
+  stepCount: number;
 };
 
-const StepContainer = ({ step }: Props) => {
+const StepContainer = ({ step, stepCount }: Props) => {
+  const { error } = useLog();
   const editorMode = useGeneralStore((state) => state.editorMode);
   const openModal = useGeneralStore((state) => state.openModal);
   const { deleteStep, moveStep } = useArmies();
+
+  const canReorder = stepCount > 1;
 
   const handleDelete = useCallback(() => {
     const confirmation = confirm(`Delete the "${step.name}" step?`);
@@ -23,13 +27,18 @@ const StepContainer = ({ step }: Props) => {
 
   const [isLoading, setLoading] = useState(false);
   const handleReorder = useCallback(
-    (direction: Direction) => {
-      if (isLoading) return;
-      setLoading(true);
-      moveStep(step.id, direction);
-      setLoading(false);
+    async (direction: Direction) => {
+      if (isLoading || !canReorder) return;
+      try {
+        setLoading(true);
+        await moveStep(step.id, direction);
+      } catch (e) {
+        error(e);
+      } finally {
+        setLoading(false);
+      }
     },
-    [step, isLoading]
+    [step, isLoading, canReorder]
   );
 
   return (
@@ -38,18 +47,22 @@ const StepContainer = ({ step }: Props) => {
         <Styled.Heading>{step.name}</Styled.Heading>
         {!!editorMode && (
           <>
-            <Styled.ReOrderButton
-              copy="<"
-              ariaLabel="Moves phase left one"
-              onClick={() => handleReorder(-1)}
-              disabled={isLoading}
-            />
-            <Styled.ReOrderButton
-              copy=">"
-              ariaLabel="Moves phase right one"
-              onClick={() => handleReorder(1)}
-              disabled={isLoading}
-            />
+            {!!canReorder && (
+              <>
+                <Styled.ReOrderButton
+                  copy="<"
+                  ariaLabel="Moves phase left one"
+                  onClick={() => handleReorder(-1)}
+                  disabled={isLoading}
+                />
+                <Styled.ReOrderButton
+                  copy=">"
+                  ariaLabel="Moves phase right one"
+                  onClick={() => handleReorder(1)}
+                  disabled={isLoading}
+                />
+              </>
+            )}
             <Styled.DeleteButton copy="Delete phase" onClick={handleDelete} />
           </>
         )}
