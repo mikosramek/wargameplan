@@ -15,6 +15,15 @@ class SessionController {
       callback(null, newSession);
     });
   }
+  verify({ sessionId, accountId }, callback) {
+    Session.findOne({ _id: sessionId, accountId }).exec((err, session) => {
+      if (err) return callback(err);
+      if (!session) {
+        return callback(new Error("Authentication missing"));
+      }
+      callback();
+    });
+  }
   revoke({ sessionId, accountId }, callback) {
     Session.findOne({ _id: sessionId, accountId }).exec((err, session) => {
       if (err) return callback(err);

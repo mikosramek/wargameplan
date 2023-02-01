@@ -56,13 +56,13 @@ export type reorderStepResponse = {
 
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
-  //   const session = useAccountStore((state) => state.session); // TODO: some sort of session validation
+  const sessionId = useAccountStore((state) => state.session); // TODO: some sort of session validation
   const { currentArmyId, currentStepId } = useArmiesStore((state) => ({
     currentArmyId: state.currentArmyId,
     currentStepId: state.currentStepId,
   }));
 
-  const headers = { accountId };
+  const headers = { accountId, sessionId };
 
   const getGetUrl = (type: urlGetterType) =>
     `${API_BASE}${ENDPOINTS.get[type]}`;
