@@ -9,7 +9,7 @@ class AccountController {
     newAccount.save((err) => {
       if (err) callback(err);
       else {
-        const { _id: id, approved, email } = newAccount;
+        const { _id: id, approved } = newAccount;
         SessionController.create({ accountId: id }, (err, newSession) => {
           if (err) return callback(err);
           const { _id: sessionId } = newSession;
