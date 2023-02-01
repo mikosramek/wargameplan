@@ -36,7 +36,10 @@ type urlPosterType = keyof typeof ENDPOINTS.post;
 type urlDeleteType = keyof typeof ENDPOINTS.delete;
 type urlPatchType = keyof typeof ENDPOINTS.patch;
 
-type LoginResponse = { id: string; email: string; approved: boolean };
+type LoginResponse = {
+  account: { id: string; sessionId: string; approved: boolean };
+  expired: boolean;
+};
 
 export type Direction = -1 | 1;
 
@@ -53,29 +56,25 @@ export type reorderStepResponse = {
 
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
-  //   const session = useAccountStore((state) => state.session); // TODO: some sort of session validation
+  const sessionId = useAccountStore((state) => state.session); // TODO: some sort of session validation
   const { currentArmyId, currentStepId } = useArmiesStore((state) => ({
     currentArmyId: state.currentArmyId,
     currentStepId: state.currentStepId,
   }));
 
-  const headers = { accountId };
+  const headers = { accountId, sessionId };
 
-  const getGetUrl = useCallback((type: urlGetterType) => {
-    return `${API_BASE}${ENDPOINTS.get[type]}`;
-  }, []);
+  const getGetUrl = (type: urlGetterType) =>
+    `${API_BASE}${ENDPOINTS.get[type]}`;
 
-  const getPostUrl = useCallback((type: urlPosterType) => {
-    return `${API_BASE}${ENDPOINTS.post[type]}`;
-  }, []);
+  const getPostUrl = (type: urlPosterType) =>
+    `${API_BASE}${ENDPOINTS.post[type]}`;
 
-  const getDeleteUrl = useCallback((type: urlDeleteType) => {
-    return `${API_BASE}${ENDPOINTS.delete[type]}`;
-  }, []);
+  const getDeleteUrl = (type: urlDeleteType) =>
+    `${API_BASE}${ENDPOINTS.delete[type]}`;
 
-  const getPatchUrl = useCallback((type: urlPatchType) => {
-    return `${API_BASE}${ENDPOINTS.patch[type]}`;
-  }, []);
+  const getPatchUrl = (type: urlPatchType) =>
+    `${API_BASE}${ENDPOINTS.patch[type]}`;
 
   const getArmies = useCallback(() => {
     const url = getGetUrl("armies");
@@ -132,7 +131,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getGetUrl, accountId, headers]
+    [accountId, headers]
   );
 
   type postNewStepProps = {
@@ -158,7 +157,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPostUrl, accountId, currentArmyId, headers]
+    [accountId, currentArmyId, headers]
   );
 
   type removedStepResponseType = {
@@ -219,7 +218,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPostUrl, accountId, headers]
+    [accountId, headers]
   );
 
   const deleteRule = useCallback(
@@ -236,7 +235,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getDeleteUrl, accountId, headers, currentStepId, currentArmyId]
+    [accountId, headers, currentStepId, currentArmyId]
   );
 
   const reorderRule = useCallback(
@@ -254,7 +253,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPatchUrl, accountId, headers, currentStepId, currentArmyId]
+    [accountId, headers, currentStepId, currentArmyId]
   );
 
   const signUp = useCallback(
@@ -267,7 +266,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPostUrl]
+    []
   );
 
   const login = useCallback(
@@ -276,18 +275,29 @@ export const useApi = () => {
       return new Promise<LoginResponse | Error>((res, rej) => {
         axios
           .get(url, { params: { email, password }, headers: {} })
-          .then((response) => {
-            res(response.data);
+          .then(({ data }) => {
+            res(data);
           })
           .catch(rej);
       });
     },
-    [getGetUrl]
+    []
   );
 
+  const sessionLogin = useCallback(({ sessionId }: { sessionId: string }) => {
+    const url = getGetUrl("account");
+    return new Promise<LoginResponse | Error>((res, rej) => {
+      axios
+        .get(url, { params: { sessionId }, headers: {} })
+        .then(({ data }) => {
+          res(data);
+        })
+        .catch(rej);
+    });
+  }, []);
+
   return {
-    signUp,
-    login,
+    account: { sessionLogin, signUp, login },
     getters: { getArmies, getArmySteps },
     posters: { postNewArmy, postNewStep, postNewRule },
     deleters: { deleteArmy, deleteStep, deleteRule },

@@ -2,18 +2,28 @@ const express = require("express");
 const router = express.Router();
 
 const AccountController = require("./controller");
+const SessionController = require("../sessions/controller");
 
 router.get("/", (req, res) => {
-  const { email, password } = req.query; // TODO: sessions
-  if (!email || !password) {
-    return res.status(400).send("Missing email or password");
+  const { email, password, sessionId } = req.query;
+
+  if (sessionId) {
+    AccountController.loginViaSession({ sessionId }, (err, account) => {
+      if (err) {
+        return res.status(403).send(err.message);
+      }
+      return res.status(200).send(account);
+    });
+  } else if (email && password) {
+    AccountController.getOne({ email, password }, (err, account) => {
+      if (err) {
+        return res.status(403).send(err.message);
+      }
+      return res.status(200).send(account);
+    });
+  } else {
+    return res.status(400).send("Missing credentials");
   }
-  AccountController.getOne({ email, password }, (err, account) => {
-    if (err) {
-      return res.status(403).send(err.message);
-    }
-    return res.status(200).send(account);
-  });
 });
 
 router.post("/create", (req, res) => {
@@ -30,6 +40,17 @@ router.post("/create", (req, res) => {
     }
 
     res.status(201).send(newAccount);
+  });
+});
+
+router.post("/signout", (req, res) => {
+  const { accountid: accountId, sessionid: sessionId } = req.headers;
+  SessionController.revoke({ sessionId, accountId }, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(403).send(err.message);
+    }
+    res.sendStatus(204);
   });
 });
 

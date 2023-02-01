@@ -20,13 +20,14 @@ const ArmyPage = () => {
   useHeading({ heading: armyFetched ? army.name : "-" });
 
   useEffect(() => {
+    if (!armiesFetched) return;
     if (id && typeof id === "string") {
       setCurrentArmyId(id);
       if (!armyFetched) {
         handleArmyFetch(id);
       }
     }
-  }, [id]);
+  }, [id, armiesFetched]);
 
   if (!armiesFetched || !armyFetched || !id) {
     return null; // TODO: loader

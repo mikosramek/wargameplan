@@ -28,6 +28,7 @@ app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/v1/accounts", require("./accounts/routes"));
+app.use(require("./sessions/middleware"));
 app.use("/api/v1/armies", require("./armies/routes"));
 app.use("/api/v1/steps", require("./steps/routes"));
 app.use("/api/v1/rules", require("./steps/rulesRoutes"));

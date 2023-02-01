@@ -1,5 +1,7 @@
 const Account = require("./schema");
 const { compareHash } = require("../utils/hash");
+const Session = require("../sessions/schema");
+const SessionController = require("../sessions/controller");
 
 class AccountController {
   create(account, callback) {
@@ -7,8 +9,19 @@ class AccountController {
     newAccount.save((err) => {
       if (err) callback(err);
       else {
-        const { _id: id, approved, email } = newAccount;
-        callback(null, { id, approved, email });
+        const { _id: id, approved } = newAccount;
+        SessionController.create({ accountId: id }, (err, newSession) => {
+          if (err) return callback(err);
+          const { _id: sessionId } = newSession;
+          callback(null, {
+            account: {
+              id,
+              sessionId,
+              approved,
+            },
+            expired: false,
+          });
+        });
       }
     });
   }
@@ -18,7 +31,43 @@ class AccountController {
       callback(null, account);
     });
   }
-  // update
+  loginViaSession({ sessionId }, callback) {
+    Session.findById(sessionId).exec((err, session) => {
+      if (err) return callback(err);
+      if (!session) {
+        return callback(new Error("Session not found"), null);
+      }
+
+      const { accountId, expiresAt, revoked } = session;
+
+      const now = new Date();
+      const expires = new Date(expiresAt);
+      if (revoked || now > expires) {
+        return callback(null, { account: null, expired: true });
+      }
+
+      Account.findById(accountId).exec((accErr, account) => {
+        if (err) return callback(accErr);
+        if (!account) {
+          return callback(
+            new Error("No account associated with session"),
+            null
+          );
+        }
+
+        const { approved } = account;
+        callback(null, {
+          account: {
+            id: accountId,
+            sessionId,
+            approved,
+          },
+          expired: false,
+        });
+      });
+    });
+  }
+  // TODO: update
   getOne({ email, password }, callback) {
     Account.findOne({ email }).exec((err, account) => {
       if (err) return callback(err);
@@ -30,11 +79,21 @@ class AccountController {
 
       compareHash(password, accountPassword)
         .then((passwordMatches) => {
-          if (passwordMatches) {
-            callback(null, { id, email, approved });
-          } else {
-            callback(new Error("Email or Password incorrect"), null);
+          if (!passwordMatches) {
+            return callback(new Error("Email or Password incorrect"), null);
           }
+          SessionController.create({ accountId: id }, (err, newSession) => {
+            if (err) return callback(err);
+            const { _id: sessionId } = newSession;
+            callback(null, {
+              account: {
+                id,
+                sessionId,
+                approved,
+              },
+              expired: false,
+            });
+          });
         })
         .catch((error) => callback(error));
     });
