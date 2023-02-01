@@ -1,6 +1,7 @@
 import { MainButton } from "@components/MainButton";
 import { useAccountStore } from "@store/account";
 import { useGeneralStore } from "@store/general";
+import { clearStoredSession } from "@utils/general";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -14,6 +15,7 @@ const Header = () => {
 
   const handleSignout = useCallback(() => {
     logout();
+    clearStoredSession();
     router.push("/");
   }, [logout]);
 

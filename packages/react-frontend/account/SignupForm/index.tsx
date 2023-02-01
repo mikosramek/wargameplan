@@ -1,10 +1,4 @@
-import {
-  MutableRefObject,
-  useCallback,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useReducer, useRef, useState } from "react";
 import Router from "next/router";
 import * as Styled from "./SignupForm.styled";
 import { Input } from "@components/Form/Input";
@@ -13,9 +7,10 @@ import { MainButton } from "@components/MainButton";
 import { useApi } from "hooks/useApi";
 import { useAccountStore } from "@store/account";
 import { useLog } from "hooks/useLog";
+import { storeSession } from "@utils/general";
 
 export const SignupForm = () => {
-  const { signUp } = useApi();
+  const { account } = useApi();
   const { error } = useLog();
   const logUserIn = useAccountStore((state) => state.login);
   const [email, setEmail] = useState(
@@ -31,14 +26,17 @@ export const SignupForm = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setApiError("");
-      signUp({ email, password })
-        .then((account) => {
-          if (account && !(account instanceof Error)) {
+      account
+        .signUp({ email, password })
+        .then((response) => {
+          if (response && !(response instanceof Error)) {
+            const { account } = response;
             logUserIn({
               id: account.id,
-              session: "",
+              session: account.sessionId,
               isVerified: account.approved,
             });
+            storeSession(account.sessionId);
             Router.push("/armies");
           }
         })
