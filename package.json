@@ -1,13 +1,13 @@
 {
-  "name": "warhammergameplan",
+  "name": "wargameplan",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "fe": "lerna run --scope=react-frontend start",
-    "be": "lerna run --scope=warhammergameplan-express start",
-    "be-test": "lerna run --scope=warhammergameplan-express test",
+    "be": "lerna run --scope=wargameplan-express start",
+    "be-test": "lerna run --scope=wargameplan-express test",
     "all": "lerna run --parallel start"
   },
   "keywords": [],

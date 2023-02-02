@@ -3,7 +3,7 @@ import { SignupForm } from "@account/SignupForm";
 import { useHeading } from "hooks/useHeading";
 
 export default function Signup() {
-  useHeading({ heading: "Warhammer Gameplan" });
+  useHeading({ heading: "WarGameplan" });
   return (
     <LayoutWrapper>
       <SignupForm />

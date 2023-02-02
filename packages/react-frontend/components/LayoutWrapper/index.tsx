@@ -13,10 +13,10 @@ const LayoutWrapper = ({ children }: Props) => {
   return (
     <>
       <Head>
-        <title>Warhammer Gameplan</title>
+        <title>WarGameplan</title>
         <meta
           name="description"
-          content="A site to help plan and keep track of warhammer games"
+          content="A site to help plan and keep track of tabletop wargame games"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
