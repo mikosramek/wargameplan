@@ -1,10 +1,10 @@
-import StepsPage from "@armies/Steps";
-import LayoutWrapper from "@components/LayoutWrapper";
-import useArmies from "hooks/useArmies";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useArmiesStore } from "@store/armies";
+import { useRouter } from "next/router";
+import { useArmiesStore } from "store/armies";
+import useArmies from "hooks/useArmies";
 import { useHeading } from "hooks/useHeading";
+import LayoutWrapper from "components/LayoutWrapper";
+import StepsPage from "armies/Steps";
 
 const ArmyPage = () => {
   const router = useRouter();

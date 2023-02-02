@@ -1,5 +1,5 @@
-import LayoutWrapper from "@components/LayoutWrapper";
-import { SignupForm } from "@account/SignupForm";
+import LayoutWrapper from "components/LayoutWrapper";
+import { SignupForm } from "account/SignupForm";
 import { useHeading } from "hooks/useHeading";
 
 export default function Signup() {

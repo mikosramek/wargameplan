@@ -1,9 +1,9 @@
-import { orderSort } from "@utils/general";
 import { useEffect, useMemo } from "react";
+import { orderSort } from "utils/general";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
-import { Direction, useApi } from "./useApi";
-import { useLog } from "./useLog";
+import { Direction, useApi } from "hooks/useApi";
+import { useLog } from "hooks/useLog";
 
 const useArmies = () => {
   const { getters, deleters, posters, patchers } = useApi();

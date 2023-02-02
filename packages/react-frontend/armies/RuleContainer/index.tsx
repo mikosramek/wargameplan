@@ -1,6 +1,6 @@
 import { useCallback, useReducer, useState } from "react";
-import { ArmyRule } from "@store/armies";
-import { useGeneralStore } from "@store/general";
+import { ArmyRule } from "store/armies";
+import { useGeneralStore } from "store/general";
 import useArmies from "hooks/useArmies";
 import * as Styled from "./RuleContainer.styled";
 import { Direction } from "hooks/useApi";

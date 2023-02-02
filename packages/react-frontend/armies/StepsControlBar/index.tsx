@@ -1,4 +1,4 @@
-import { useGeneralStore } from "@store/general";
+import { useGeneralStore } from "store/general";
 import * as Styled from "./StepsControlBar.styled";
 
 type Props = {

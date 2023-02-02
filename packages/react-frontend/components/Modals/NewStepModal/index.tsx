@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 import { useInput, BaseInputs } from "hooks/form/useInput";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
-import { Input } from "@components/Form/Input";
-import { useGeneralStore } from "@store/general";
-import { useArmiesStore } from "@store/armies";
+import { Input } from "components/Form/Input";
+import { useGeneralStore } from "store/general";
+import { useArmiesStore } from "store/armies";
 import * as Styled from "./NewStepModal.styled";
 
 const baseInputs = {

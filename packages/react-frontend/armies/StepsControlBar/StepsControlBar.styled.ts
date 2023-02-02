@@ -1,5 +1,5 @@
-import { MainButton } from "@components/MainButton";
 import styled, { css } from "styled-components";
+import { MainButton } from "components/MainButton";
 
 export const Nav = styled.nav`
   display: block;

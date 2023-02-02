@@ -1,4 +1,4 @@
-import { ArmySteps } from "@store/armies";
+import { ArmySteps } from "store/armies";
 
 type orderSortObject = ArmySteps;
 export const orderSort = (a: orderSortObject, b: orderSortObject) => {

@@ -1,10 +1,10 @@
-import { ArmySteps, useArmiesStore } from "@store/armies";
-import useCounter from "hooks/useCounter";
 import { useEffect, useMemo, useState } from "react";
-import StepContainer from "@armies/StepContainer";
-import { StepsControlBar } from "@armies/StepsControlBar";
+import { ArmySteps, useArmiesStore } from "store/armies";
+import useCounter from "hooks/useCounter";
+import StepContainer from "armies/StepContainer";
+import { StepsControlBar } from "armies/StepsControlBar";
 import { useLog } from "hooks/useLog";
-import { orderSort } from "@utils/general";
+import { orderSort } from "utils/general";
 import * as Styled from "./Steps.styled";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { MainButton } from "@components/MainButton";
+import { MainButton } from "components/MainButton";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`

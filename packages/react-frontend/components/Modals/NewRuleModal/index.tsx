@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
-import { useArmiesStore } from "@store/armies";
-import { useGeneralStore } from "@store/general";
+import { useArmiesStore } from "store/armies";
+import { useGeneralStore } from "store/general";
 import { useInput, BaseInputs } from "hooks/form/useInput";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
-import { Input } from "@components/Form/Input";
+import { Input } from "components/Form/Input";
 import * as Styled from "./NewRuleModal.styled";
 
 const baseInputs = {

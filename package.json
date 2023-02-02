@@ -8,6 +8,7 @@
     "fe": "lerna run --scope=react-frontend start",
     "be": "lerna run --scope=wargameplan-express start",
     "be-test": "lerna run --scope=wargameplan-express test",
+    "fe-test": "lerna run --scope=react-frontend test",
     "all": "lerna run --parallel start"
   },
   "keywords": [],
