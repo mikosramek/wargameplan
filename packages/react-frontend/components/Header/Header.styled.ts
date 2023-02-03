@@ -23,6 +23,7 @@ export const InnerHeading = styled.span`
 export const StyledLink = styled.a<{ isActive: boolean }>`
   padding: 0 10px;
   border-right: 1px solid var(--border);
+  text-decoration: none;
   &:last-of-type {
     border-right: none;
   }

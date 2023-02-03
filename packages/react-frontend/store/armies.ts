@@ -9,7 +9,7 @@ export type Army = {
   steps: Record<string, ArmySteps>;
 };
 
-type Armies = Record<string, Army>;
+export type Armies = Record<string, Army>;
 
 export type UnParsedArmy = {
   id: string;

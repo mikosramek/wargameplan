@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import axios from "axios";
-import { API_BASE } from "@utils/config";
+import { API_BASE } from "utils/config";
 import { useAccountStore } from "store/account";
 import {
   ArmyRule,

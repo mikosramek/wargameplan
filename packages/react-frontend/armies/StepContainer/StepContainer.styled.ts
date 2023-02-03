@@ -1,5 +1,5 @@
-import { MainButton } from "@components/MainButton";
 import styled from "styled-components";
+import { MainButton } from "components/MainButton";
 
 export const Wrapper = styled.section`
   width: 90%;

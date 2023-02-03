@@ -1,5 +1,5 @@
-import { useGeneralStore } from "@store/general";
 import { useEffect } from "react";
+import { useGeneralStore } from "store/general";
 
 type Props = {
   heading: string;

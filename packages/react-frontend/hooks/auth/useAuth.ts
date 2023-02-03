@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Router from "next/router";
 import { useAccountStore } from "store/account";
-import { clearStoredSession, getStoredSession } from "@utils/general";
+import { clearStoredSession, getStoredSession } from "utils/general";
 import { useLog } from "hooks/useLog";
 import { authMap } from "hooks/auth/authMap";
 import { useApi } from "hooks/useApi";

@@ -1,13 +1,13 @@
 import { useCallback, useReducer, useRef, useState } from "react";
 import Router from "next/router";
 import * as Styled from "./SignupForm.styled";
-import { Input } from "@components/Form/Input";
-import { IS_DEV } from "@utils/config";
-import { MainButton } from "@components/MainButton";
+import { Input } from "components/Form/Input";
+import { IS_DEV } from "utils/config";
+import { MainButton } from "components/MainButton";
 import { useApi } from "hooks/useApi";
-import { useAccountStore } from "@store/account";
+import { useAccountStore } from "store/account";
 import { useLog } from "hooks/useLog";
-import { storeSession } from "@utils/general";
+import { storeSession } from "utils/general";
 
 export const SignupForm = () => {
   const { account } = useApi();
@@ -50,7 +50,7 @@ export const SignupForm = () => {
   );
 
   return (
-    <Styled.Form onSubmit={handleSubmit}>
+    <Styled.Form name="Sign up" onSubmit={handleSubmit}>
       <Styled.Title>Sign up</Styled.Title>
       <Input
         type="email"

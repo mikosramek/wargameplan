@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { NewRuleModal } from "@components/Modals/NewRuleModal";
-import { NewStepModal } from "@components/Modals/NewStepModal";
-import ModalWrapper from "@components/Modals/ModalWrapper";
-import { useGeneralStore } from "@store/general";
-import { NewArmyModal } from "@components/Modals/NewArmyModal";
+import { NewRuleModal } from "components/Modals/NewRuleModal";
+import { NewStepModal } from "components/Modals/NewStepModal";
+import ModalWrapper from "components/Modals/ModalWrapper";
+import { useGeneralStore } from "store/general";
+import { NewArmyModal } from "components/Modals/NewArmyModal";
 
 export const ModalType = {
   NewRule: "NewRule",

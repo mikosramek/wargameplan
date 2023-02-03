@@ -1,9 +1,8 @@
-import { useGeneralStore } from "@store/general";
-import { Input } from "@components/Form/Input";
-import { useApi } from "hooks/useApi";
+import { useCallback, useState } from "react";
+import { useGeneralStore } from "store/general";
+import { Input } from "components/Form/Input";
 import { useInput, BaseInputs } from "hooks/form/useInput";
 import * as Styled from "./NewArmyModal.styled";
-import { useCallback, useState } from "react";
 import { useLog } from "hooks/useLog";
 import useArmies from "hooks/useArmies";
 

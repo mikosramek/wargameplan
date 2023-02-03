@@ -1,9 +1,10 @@
-import { orderSort } from "@utils/general";
 import { useEffect, useMemo } from "react";
+import { orderSort } from "utils/general";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
-import { Direction, useApi } from "./useApi";
-import { useLog } from "./useLog";
+import { Direction, useApi } from "hooks/useApi";
+import { useLog } from "hooks/useLog";
+import { nameSort } from "utils/general";
 
 const useArmies = () => {
   const { getters, deleters, posters, patchers } = useApi();
@@ -24,13 +25,7 @@ const useArmies = () => {
   const armies = useArmiesStore((state) => state.armies);
 
   const alphabeticalArmies = useMemo(() => {
-    return Object.entries(armies).sort((a, b) => {
-      const [_a, aArmy] = a;
-      const [_b, bArmy] = b;
-      if (aArmy.name.toLowerCase() > bArmy.name.toLowerCase()) return 1;
-      else if (aArmy.name.toLowerCase() < bArmy.name.toLowerCase()) return -1;
-      else return 0;
-    });
+    return Object.entries(armies).sort(nameSort);
   }, [armies]);
 
   const armiesFetched = useArmiesStore((state) => state.armiesFetched);

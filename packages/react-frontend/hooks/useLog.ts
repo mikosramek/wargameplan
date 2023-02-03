@@ -1,5 +1,5 @@
-import { IS_DEV } from "@utils/config";
 import { useCallback } from "react";
+import { IS_DEV } from "utils/config";
 
 export const useLog = () => {
   const log = useCallback(

@@ -1,7 +1,7 @@
-import { ArmySteps } from "@store/armies";
-import RuleContainer from "@armies/RuleContainer";
+import { ArmySteps } from "store/armies";
+import RuleContainer from "armies/RuleContainer";
 import * as Styled from "./StepContainer.styled";
-import { useGeneralStore } from "@store/general";
+import { useGeneralStore } from "store/general";
 import useArmies from "hooks/useArmies";
 import { useCallback, useState } from "react";
 import { Direction } from "hooks/useApi";

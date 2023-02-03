@@ -1,8 +1,8 @@
-import LayoutWrapper from "@components/LayoutWrapper";
-import ArmyPreview from "@armies/ArmyPreview/ArmyPreview";
+import LayoutWrapper from "components/LayoutWrapper";
+import ArmyPreview from "armies/ArmyPreview/ArmyPreview";
 import useArmies from "hooks/useArmies";
 import { useHeading } from "hooks/useHeading";
-import { useGeneralStore } from "@store/general";
+import { useGeneralStore } from "store/general";
 
 import * as Styled from "./armies.styled";
 

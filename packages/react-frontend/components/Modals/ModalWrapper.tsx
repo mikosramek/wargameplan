@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useGeneralStore } from "@store/general";
+import { useGeneralStore } from "store/general";
 import * as Styled from "./ModalWrapper.styled";
 
 type Props = {
