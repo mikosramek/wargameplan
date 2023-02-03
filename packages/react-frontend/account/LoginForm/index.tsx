@@ -39,7 +39,7 @@ export const LoginForm = () => {
   );
 
   return (
-    <Styled.Form onSubmit={handleSubmit}>
+    <Styled.Form name="Login" onSubmit={handleSubmit}>
       <Styled.Title>Login</Styled.Title>
       <Input
         type="email"

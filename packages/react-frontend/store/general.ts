@@ -2,7 +2,7 @@ import { ModalType } from "hooks/useModal";
 import create from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface State {
+export interface State {
   editorMode: boolean;
   toggleEditorMode: () => void;
   currentModal: keyof typeof ModalType | null;
