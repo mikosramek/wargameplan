@@ -17,6 +17,13 @@ export const authMap = [
     valueCheck: (value: any) => !value,
     redirectTo: "/verify",
   },
+  // if you're logged in and verified, don't show the verify page
+  {
+    route: "/verify",
+    valueToCheck: "isVerified",
+    valueCheck: (value: any) => !!value,
+    redirectTo: "/armies",
+  },
   // logged in, don't allow signup
   {
     route: "/signup",
@@ -34,7 +41,7 @@ export const authMap = [
   {
     // not logged in, redirect to base login page
     route: "*",
-    routeExceptions: ["/signup", "/verify"],
+    routeExceptions: ["/signup"],
     valueToCheck: "isLoggedIn",
     valueCheck: (value: any) => !value,
     redirectTo: "/",

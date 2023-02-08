@@ -8,7 +8,7 @@ import { useApi } from "hooks/useApi";
 
 export const useAuth = () => {
   const accountStore = useAccountStore((state) => state);
-  const currentRoute = typeof window !== "undefined" ? Router.asPath : null;
+  const currentRoute = typeof window !== "undefined" ? Router.route : null;
   const { log } = useLog();
   const { account: accountApi } = useApi();
 
@@ -41,7 +41,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     if (!currentRoute || !checkedForSession) return;
-    log({ currentRoute });
+    log({ currentRoute, Router });
     const checks = authMap.filter(({ route, redirectTo, routeExceptions }) => {
       if (redirectTo === currentRoute) return false;
       else if (routeExceptions && routeExceptions.includes(currentRoute))

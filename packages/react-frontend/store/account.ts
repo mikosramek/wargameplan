@@ -6,6 +6,7 @@ export interface State {
   accountId: string | null;
   session: string | null;
   isVerified: boolean;
+  updateAsVerified: () => void;
   login: ({
     id,
     session,
@@ -25,6 +26,7 @@ export const useAccountStore = create<State>()(
       accountId: null,
       session: null,
       isVerified: false,
+      updateAsVerified: () => set({ isVerified: true }),
       login: ({ id, session, isVerified }) =>
         set(
           () => ({

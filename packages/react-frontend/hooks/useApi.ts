@@ -20,6 +20,8 @@ export const ENDPOINTS = {
     armies: "/v1/armies/create",
     step: "/v1/steps/create",
     rule: "/v1/rules/create",
+    verifyEmail: "/v1/accounts/verify/email",
+    verifyCheck: "/v1/accounts/verify/check",
   },
   delete: {
     rule: "/v1/rules/remove",
@@ -296,11 +298,41 @@ export const useApi = () => {
     });
   }, []);
 
+  const verifyEmail = useCallback(() => {
+    const url = getPostUrl("verifyEmail");
+    console.log({ headers });
+    return new Promise<null | Error>((res, rej) => {
+      axios
+        .post(url, {}, { headers })
+        .then(({ data }) => {
+          res(data);
+        })
+        .catch(rej);
+    });
+  }, [headers]);
+
+  const verifyCheck = useCallback(
+    ({ code }: { code: string }) => {
+      const url = getPostUrl("verifyCheck");
+      console.log(headers);
+      return new Promise<boolean | Error>((res, rej) => {
+        axios
+          .post(url, { code }, { headers })
+          .then(({ data }) => {
+            res(data);
+          })
+          .catch(rej);
+      });
+    },
+    [headers]
+  );
+
   return {
     account: { sessionLogin, signUp, login },
     getters: { getArmies, getArmySteps },
     posters: { postNewArmy, postNewStep, postNewRule },
     deleters: { deleteArmy, deleteStep, deleteRule },
     patchers: { reorderStep, reorderRule },
+    verification: { verifyEmail, verifyCheck },
   };
 };

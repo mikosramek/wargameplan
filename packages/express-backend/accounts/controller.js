@@ -126,7 +126,13 @@ class AccountController {
         // send email to user's email
         sendVerificationEmail(
           { toEmail: email, code: account.verificationId },
-          callback
+          (err) => {
+            if (err) {
+              console.error(err);
+              return callback(err);
+            }
+            callback();
+          }
         );
       });
     });
@@ -143,7 +149,7 @@ class AccountController {
       const now = new Date();
       const expiry = new Date(verificationDateCreated);
       expiry.setTime(expiry.getTime() + 600000);
-      if (now > expiry) return callback(new Error("Verifcation code expired"));
+      if (now > expiry) return callback(new Error("Verification code expired"));
 
       if (code === verificationId) {
         account.approved = true;
