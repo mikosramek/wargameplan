@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-const { DB_NAME, DB_USER, DB_PASSWORD } = process.env;
+const { DB_NAME, DB_USER, DB_PASSWORD, FRONT_END_URL, DEV_FRONT_END_URL } =
+  process.env;
 
 const dbConnection = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@prod.8tbszom.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
@@ -23,7 +24,20 @@ db.on("open", () => {
 });
 
 const app = express();
-app.use(cors());
+
+const whitelist = [FRONT_END_URL, DEV_FRONT_END_URL];
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
+
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
