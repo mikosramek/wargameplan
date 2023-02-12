@@ -21,9 +21,7 @@ const ArmyPage = () => {
   useHeading({ heading: armyFetched ? army.name : "-" });
 
   useEffect(() => {
-    console.log("use effect");
     if (!armiesFetched || armyFetched) {
-      console.log("early return");
       return;
     }
     if (id && typeof id === "string") {
