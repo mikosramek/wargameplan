@@ -27,7 +27,7 @@ const ArmyPage = () => {
         handleArmyFetch(id);
       }
     }
-  }, [id, armiesFetched]);
+  }, [id, armiesFetched, setCurrentArmyId, armyFetched, handleArmyFetch]);
 
   if (!armiesFetched || !armyFetched || !id) {
     return null; // TODO: loader

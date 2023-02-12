@@ -14,7 +14,7 @@ const baseInputs = {
     errorString: "A step name is required",
     validate: (val) => !!val,
   },
-} satisfies BaseInputs;
+} as BaseInputs;
 
 export const NewStepModal = () => {
   const { posters } = useApi();
@@ -49,7 +49,7 @@ export const NewStepModal = () => {
           setLoading(false);
         });
     },
-    [inputs]
+    [closeModal, error, inputs, posters, updateCurrentArmyStep, validateInputs]
   );
 
   return (

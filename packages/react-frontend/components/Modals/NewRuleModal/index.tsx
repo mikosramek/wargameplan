@@ -21,7 +21,7 @@ const baseInputs = {
     validate: (val) => !!val,
     specialType: "textarea",
   },
-} satisfies BaseInputs;
+} as BaseInputs;
 
 export const NewRuleModal = () => {
   const { error } = useLog();
@@ -58,7 +58,14 @@ export const NewRuleModal = () => {
           setLoading(false);
         });
     },
-    [inputs, posters]
+    [
+      closeModal,
+      error,
+      inputs,
+      posters,
+      updateCurrentArmyStepRule,
+      validateInputs,
+    ]
   );
   return (
     <Styled.Form onSubmit={handleSubmit}>

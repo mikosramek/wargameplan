@@ -4,7 +4,7 @@ import useArmies from "hooks/useArmies";
 import { useHeading } from "hooks/useHeading";
 import { useGeneralStore } from "store/general";
 
-import * as Styled from "./armies.styled";
+import * as Styled from "styles/armies.styled";
 
 const Armies = () => {
   const { alphabeticalArmies: armies, armiesFetched } = useArmies();

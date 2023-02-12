@@ -1,14 +1,13 @@
-import { useRouter } from "next/router";
-import LayoutWrapper from "components/LayoutWrapper";
-import { useHeading } from "hooks/useHeading";
-
-import * as Styled from "./verify.styled";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MainButton } from "components/MainButton";
+import { useRouter } from "next/router";
+import { useHeading } from "hooks/useHeading";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
 import { useAccountStore } from "store/account";
 import { useConfigStore } from "store/config";
+import LayoutWrapper from "components/LayoutWrapper";
+import { MainButton } from "components/MainButton";
+import * as Styled from "styles/verify.styled";
 
 export default function Verify() {
   const router = useRouter();
@@ -44,7 +43,7 @@ export default function Verify() {
           error(err);
         });
     }
-  }, [code, verification]);
+  }, [code, verification, error, updateAsVerified, router]);
 
   const sendEmail = useCallback(() => {
     verification
@@ -55,7 +54,7 @@ export default function Verify() {
         }
       })
       .catch((err) => error(err));
-  }, []);
+  }, [error, verification]);
 
   const emailRequestSection = useMemo(() => {
     if (!emailVerificationEnabled) {
@@ -73,7 +72,7 @@ export default function Verify() {
         <MainButton copy="Send a verification email" onClick={sendEmail} />
       );
     }
-  }, [emailVerificationEnabled, emailSent]);
+  }, [emailVerificationEnabled, emailSent, sendEmail]);
 
   return (
     <LayoutWrapper>
@@ -82,7 +81,7 @@ export default function Verify() {
           <>
             <Styled.Title>Verify your account to continue</Styled.Title>
             <Styled.Copy>
-              You'll have to verify your account to start creating plans.
+              {`You'll have to verify your account to start creating plans.`}
             </Styled.Copy>
             {emailRequestSection}
           </>

@@ -13,7 +13,7 @@ const baseInputs = {
     errorString: "An army name is required",
     validate: (val) => !!val,
   },
-} satisfies BaseInputs;
+} as BaseInputs;
 
 export const NewArmyModal = () => {
   const { createArmy } = useArmies();
@@ -42,7 +42,7 @@ export const NewArmyModal = () => {
         setLoading(false);
       }
     },
-    [inputs]
+    [closeModal, createArmy, error, inputs, validateInputs]
   );
 
   return (
