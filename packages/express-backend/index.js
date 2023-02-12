@@ -43,12 +43,12 @@ app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get(
-  ".well-known/acme-challenge/juepGiP8vqYvWiLk4WVT1tTqg3EiZ8GHWYYIsOpLKvA",
+  "/.well-known/acme-challenge/BYicdxSWYOGe89NpOFV4KsKcbuo4K3fgfqpgwZfGkjU",
   (req, res) => {
     res
       .status(200)
       .send(
-        "juepGiP8vqYvWiLk4WVT1tTqg3EiZ8GHWYYIsOpLKvA.L8hOzbQBwnMUT6BqD8rvjfuRPc5j9c09WovBAG4KW5A"
+        "BYicdxSWYOGe89NpOFV4KsKcbuo4K3fgfqpgwZfGkjU.L8hOzbQBwnMUT6BqD8rvjfuRPc5j9c09WovBAG4KW5A"
       );
   }
 );
