@@ -10,7 +10,7 @@ import { useLog } from "hooks/useLog";
 import { storeSession } from "utils/general";
 
 export const SignupForm = () => {
-  const { account } = useApi();
+  const { signUp } = useApi();
   const { error } = useLog();
   const logUserIn = useAccountStore((state) => state.login);
   const [email, setEmail] = useState(
@@ -26,8 +26,7 @@ export const SignupForm = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setApiError("");
-      account
-        .signUp({ email, password })
+      signUp({ email, password })
         .then((response) => {
           if (response && !(response instanceof Error)) {
             const { account } = response;
@@ -46,7 +45,7 @@ export const SignupForm = () => {
           if (errorRef.current) errorRef.current.focus();
         });
     },
-    [email, password]
+    [email, error, logUserIn, password, signUp]
   );
 
   return (

@@ -35,4 +35,4 @@ app.use("/api/v1/armies", require("./armies/routes"));
 app.use("/api/v1/steps", require("./steps/routes"));
 app.use("/api/v1/rules", require("./steps/rulesRoutes"));
 
-app.listen(3000);
+app.listen(1337);

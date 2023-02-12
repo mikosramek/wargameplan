@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import axios from "axios";
 import { API_BASE } from "utils/config";
 import { useAccountStore } from "store/account";
@@ -56,27 +56,27 @@ export type reorderStepResponse = {
   shiftedStep: movedStep;
 };
 
+const getGetUrl = (type: urlGetterType) => `${API_BASE}${ENDPOINTS.get[type]}`;
+
+const getPostUrl = (type: urlPosterType) =>
+  `${API_BASE}${ENDPOINTS.post[type]}`;
+
+const getDeleteUrl = (type: urlDeleteType) =>
+  `${API_BASE}${ENDPOINTS.delete[type]}`;
+
+const getPatchUrl = (type: urlPatchType) =>
+  `${API_BASE}${ENDPOINTS.patch[type]}`;
+
 export const useApi = () => {
   const accountId = useAccountStore((state) => state.accountId);
   const sessionId = useAccountStore((state) => state.session); // TODO: some sort of session validation
-  const { currentArmyId, currentStepId } = useArmiesStore((state) => ({
-    currentArmyId: state.currentArmyId,
-    currentStepId: state.currentStepId,
-  }));
+  const currentArmyId = useArmiesStore((state) => state.currentArmyId);
+  const currentStepId = useArmiesStore((state) => state.currentStepId);
 
-  const headers = { accountId, sessionId };
-
-  const getGetUrl = (type: urlGetterType) =>
-    `${API_BASE}${ENDPOINTS.get[type]}`;
-
-  const getPostUrl = (type: urlPosterType) =>
-    `${API_BASE}${ENDPOINTS.post[type]}`;
-
-  const getDeleteUrl = (type: urlDeleteType) =>
-    `${API_BASE}${ENDPOINTS.delete[type]}`;
-
-  const getPatchUrl = (type: urlPatchType) =>
-    `${API_BASE}${ENDPOINTS.patch[type]}`;
+  const headers = useMemo(
+    () => ({ accountId, sessionId }),
+    [accountId, sessionId]
+  );
 
   const getArmies = useCallback(() => {
     const url = getGetUrl("armies");
@@ -86,7 +86,7 @@ export const useApi = () => {
         .then(({ data }) => res(data))
         .catch(rej);
     });
-  }, [getGetUrl, headers]);
+  }, [headers]);
 
   const postNewArmy = useCallback(
     (armyName: string) => {
@@ -98,7 +98,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [getPostUrl, headers]
+    [headers]
   );
 
   type removedArmyResponse = {
@@ -119,7 +119,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [currentArmyId, headers]
+    [accountId, headers]
   );
 
   const getArmySteps = useCallback(
@@ -180,7 +180,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [currentArmyId, headers]
+    [accountId, currentArmyId, headers]
   );
 
   const reorderStep = useCallback(
@@ -194,7 +194,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [currentArmyId, headers]
+    [accountId, currentArmyId, headers]
   );
 
   type postNewRuleProps = {
@@ -220,7 +220,7 @@ export const useApi = () => {
           .catch(rej);
       });
     },
-    [accountId, headers]
+    [accountId, currentArmyId, currentStepId, headers]
   );
 
   const deleteRule = useCallback(
@@ -326,11 +326,20 @@ export const useApi = () => {
   );
 
   return {
-    account: { sessionLogin, signUp, login },
-    getters: { getArmies, getArmySteps },
-    posters: { postNewArmy, postNewStep, postNewRule },
-    deleters: { deleteArmy, deleteStep, deleteRule },
-    patchers: { reorderStep, reorderRule },
-    verification: { verifyEmail, verifyCheck },
+    sessionLogin,
+    signUp,
+    login,
+    getArmies,
+    getArmySteps,
+    postNewArmy,
+    postNewStep,
+    postNewRule,
+    deleteArmy,
+    deleteStep,
+    deleteRule,
+    reorderStep,
+    reorderRule,
+    verifyEmail,
+    verifyCheck,
   };
 };

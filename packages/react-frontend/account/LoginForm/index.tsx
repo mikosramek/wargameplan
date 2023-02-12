@@ -10,7 +10,7 @@ import { Input } from "components/Form/Input";
 import * as Styled from "./LoginForm.styled";
 
 export const LoginForm = () => {
-  const { account } = useApi();
+  const { login } = useApi();
   const { error } = useLog();
   const logUserIn = useAccountStore((state) => state.login);
   const [email, setEmail] = useState(IS_DEV ? "miko@mikosramek.ca" : "");
@@ -19,8 +19,7 @@ export const LoginForm = () => {
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      account
-        .login({ email, password })
+      login({ email, password })
         .then((response) => {
           if (response && !(response instanceof Error)) {
             const { account } = response;
@@ -35,7 +34,7 @@ export const LoginForm = () => {
         })
         .catch(error);
     },
-    [email, password]
+    [email, error, logUserIn, login, password]
   );
 
   return (

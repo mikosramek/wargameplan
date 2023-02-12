@@ -10,7 +10,7 @@ export const useAuth = () => {
   const accountStore = useAccountStore((state) => state);
   const currentRoute = typeof window !== "undefined" ? Router.route : null;
   const { log } = useLog();
-  const { account: accountApi } = useApi();
+  const { sessionLogin } = useApi();
 
   const [checkedForSession, setSessionCheck] = useState(false);
 
@@ -18,7 +18,7 @@ export const useAuth = () => {
     const sessionId = getStoredSession();
     log("stored session: ", sessionId);
     if (sessionId) {
-      const response = await accountApi.sessionLogin({ sessionId });
+      const response = await sessionLogin({ sessionId });
       if (!(response instanceof Error)) {
         const { account, expired } = response;
         if (!expired) {
@@ -37,6 +37,7 @@ export const useAuth = () => {
   // run once
   useEffect(() => {
     handleSessionCheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -58,5 +59,5 @@ export const useAuth = () => {
         return;
       }
     }
-  }, [accountStore, currentRoute, checkedForSession]);
+  }, [accountStore, currentRoute, checkedForSession, log]);
 };

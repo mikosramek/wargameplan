@@ -15,7 +15,7 @@ const ArmyPreview = ({ id, army }: Props) => {
 
   const handleDelete = useCallback(() => {
     confirm(`Delete the ${army.name} army?`) ? deleteArmy(id) : null;
-  }, [id]);
+  }, [army.name, deleteArmy, id]);
 
   return (
     <Styled.Wrapper>

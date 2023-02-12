@@ -25,7 +25,7 @@ const baseInputs = {
 
 export const NewRuleModal = () => {
   const { error } = useLog();
-  const { posters } = useApi();
+  const { postNewRule } = useApi();
   const updateCurrentArmyStepRule = useArmiesStore(
     (state) => state.updateCurrentArmyStepRule
   );
@@ -42,11 +42,10 @@ export const NewRuleModal = () => {
       if (!isFormValid) return;
       const form = inputs as typeof baseInputs;
       setLoading(true);
-      posters
-        .postNewRule({
-          name: form.ruleName.val,
-          text: form.ruleText.val,
-        })
+      postNewRule({
+        name: form.ruleName.val,
+        text: form.ruleText.val,
+      })
         .then((updatedSteps) => {
           if (updatedSteps && !(updatedSteps instanceof Error)) {
             closeModal();
@@ -62,7 +61,7 @@ export const NewRuleModal = () => {
       closeModal,
       error,
       inputs,
-      posters,
+      postNewRule,
       updateCurrentArmyStepRule,
       validateInputs,
     ]

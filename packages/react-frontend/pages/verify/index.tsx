@@ -16,7 +16,7 @@ export default function Verify() {
   const emailVerificationEnabled = useConfigStore(
     (state) => state.flags.emailVerification
   );
-  const { verification } = useApi();
+  const { verifyCheck, verifyEmail } = useApi();
   const [code, setCode] = useState<null | string>(null);
   const { error } = useLog();
 
@@ -31,8 +31,7 @@ export default function Verify() {
 
   useEffect(() => {
     if (code) {
-      verification
-        .verifyCheck({ code })
+      verifyCheck({ code })
         .then((response) => {
           if (!(response instanceof Error) && response) {
             updateAsVerified();
@@ -43,18 +42,17 @@ export default function Verify() {
           error(err);
         });
     }
-  }, [code, verification, error, updateAsVerified, router]);
+  }, [code, error, updateAsVerified, router, verifyCheck]);
 
   const sendEmail = useCallback(() => {
-    verification
-      .verifyEmail()
+    verifyEmail()
       .then((response) => {
         if (!(response instanceof Error)) {
           setEmailSent(true);
         }
       })
       .catch((err) => error(err));
-  }, [error, verification]);
+  }, [error, verifyEmail]);
 
   const emailRequestSection = useMemo(() => {
     if (!emailVerificationEnabled) {
