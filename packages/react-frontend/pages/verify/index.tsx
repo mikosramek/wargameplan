@@ -3,16 +3,20 @@ import LayoutWrapper from "components/LayoutWrapper";
 import { useHeading } from "hooks/useHeading";
 
 import * as Styled from "./verify.styled";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MainButton } from "components/MainButton";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
 import { useAccountStore } from "store/account";
+import { useConfigStore } from "store/config";
 
 export default function Verify() {
   const router = useRouter();
   useHeading({ heading: "WarGameplan" });
   const updateAsVerified = useAccountStore((state) => state.updateAsVerified);
+  const emailVerificationEnabled = useConfigStore(
+    (state) => state.flags.emailVerification
+  );
   const { verification } = useApi();
   const [code, setCode] = useState<null | string>(null);
   const { error } = useLog();
@@ -53,6 +57,24 @@ export default function Verify() {
       .catch((err) => error(err));
   }, []);
 
+  const emailRequestSection = useMemo(() => {
+    if (!emailVerificationEnabled) {
+      return (
+        <Styled.Copy>
+          Accounts currently have to be manually verified
+        </Styled.Copy>
+      );
+    } else if (emailSent) {
+      return (
+        <Styled.Copy>Check your email for a verification link.</Styled.Copy>
+      );
+    } else {
+      return (
+        <MainButton copy="Send a verification email" onClick={sendEmail} />
+      );
+    }
+  }, [emailVerificationEnabled, emailSent]);
+
   return (
     <LayoutWrapper>
       <Styled.Wrapper>
@@ -62,16 +84,7 @@ export default function Verify() {
             <Styled.Copy>
               You'll have to verify your account to start creating plans.
             </Styled.Copy>
-            {emailSent ? (
-              <Styled.Copy>
-                Check your email for a verification link.
-              </Styled.Copy>
-            ) : (
-              <MainButton
-                copy="Send a verification email"
-                onClick={sendEmail}
-              />
-            )}
+            {emailRequestSection}
           </>
         )}
         {!!code && (
