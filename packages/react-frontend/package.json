@@ -5,6 +5,7 @@
     "start": "next dev -p 8080",
     "build": "next build",
     "prod": "next start",
+    "prod-": "next build && next start",
     "lint": "next lint",
     "test": "jest --verbose"
   },

@@ -300,7 +300,6 @@ export const useApi = () => {
 
   const verifyEmail = useCallback(() => {
     const url = getPostUrl("verifyEmail");
-    console.log({ headers });
     return new Promise<null | Error>((res, rej) => {
       axios
         .post(url, {}, { headers })
@@ -314,7 +313,6 @@ export const useApi = () => {
   const verifyCheck = useCallback(
     ({ code }: { code: string }) => {
       const url = getPostUrl("verifyCheck");
-      console.log(headers);
       return new Promise<boolean | Error>((res, rej) => {
         axios
           .post(url, { code }, { headers })
