@@ -4,6 +4,7 @@ import { useHeading } from "hooks/useHeading";
 
 export default function Home() {
   useHeading({ heading: "WarGameplan" });
+  console.log(process.env);
   return (
     <LayoutWrapper>
       <LoginForm />
