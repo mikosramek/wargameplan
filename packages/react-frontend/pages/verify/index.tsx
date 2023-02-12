@@ -9,12 +9,6 @@ import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
 import { useAccountStore } from "store/account";
 
-// get button to send email request
-// // if that succeeds, put button on cooldown
-// see if ?code= exists on url on load
-// // if it does: send verification request
-// // // if that returns true, update account object as approved
-
 export default function Verify() {
   const router = useRouter();
   useHeading({ heading: "WarGameplan" });
