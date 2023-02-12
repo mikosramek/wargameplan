@@ -3,7 +3,7 @@ import { LoginForm } from "account/LoginForm";
 import { useHeading } from "hooks/useHeading";
 
 export default function Home() {
-  useHeading({ heading: "WarGameplan" });
+  useHeading({ heading: "WarGamePlanner" });
   return (
     <LayoutWrapper>
       <LoginForm />

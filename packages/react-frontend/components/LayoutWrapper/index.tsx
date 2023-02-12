@@ -13,7 +13,7 @@ const LayoutWrapper = ({ children }: Props) => {
   return (
     <>
       <Head>
-        <title>WarGameplan</title>
+        <title>WarGamePlanner</title>
         <meta
           name="description"
           content="A site to help plan and keep track of tabletop wargame games"

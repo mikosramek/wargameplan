@@ -15,7 +15,7 @@ export interface State {
 export const useGeneralStore = create<State>()(
   devtools(
     (set) => ({
-      heading: "WarGameplan",
+      heading: "WarGamePlanner",
       setHeading: (newHeading: string) => set(() => ({ heading: newHeading })),
       editorMode: false,
       toggleEditorMode: () =>

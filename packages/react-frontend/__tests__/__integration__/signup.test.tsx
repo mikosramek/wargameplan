@@ -11,7 +11,7 @@ describe("Signup", () => {
     render(<Signup />);
   });
   it("render the expected heading", () => {
-    const heading = screen.getByRole("heading", { name: "WarGameplan" });
+    const heading = screen.getByRole("heading", { name: "WarGamePlanner" });
     expect(heading).toBeInTheDocument();
   });
   it("renders the login form", () => {

@@ -11,7 +11,7 @@ import * as Styled from "styles/verify.styled";
 
 export default function Verify() {
   const router = useRouter();
-  useHeading({ heading: "WarGameplan" });
+  useHeading({ heading: "WarGamePlanner" });
   const updateAsVerified = useAccountStore((state) => state.updateAsVerified);
   const emailVerificationEnabled = useConfigStore(
     (state) => state.flags.emailVerification
