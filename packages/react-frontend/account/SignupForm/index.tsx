@@ -37,7 +37,7 @@ export const SignupForm = () => {
               isVerified: account.approved,
             });
             storeSession(account.sessionId);
-            Router.push("/armies");
+            Router.push("/verify");
           }
         })
         .catch((e) => {

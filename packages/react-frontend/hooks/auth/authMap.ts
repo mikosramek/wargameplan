@@ -9,12 +9,21 @@ type AuthChecker = {
 };
 
 export const authMap = [
-  //   {
-  //     route: "/",
-  //     valueToCheck: "isVerified",
-  //     valueCheck: (value: any) => !value,
-  //     redirectTo: "/verify",
-  //   },
+  // if you're logged in, but not verified, then move to verify page
+  {
+    route: "*",
+    routeExceptions: ["/signup", "/"],
+    valueToCheck: "isVerified",
+    valueCheck: (value: any) => !value,
+    redirectTo: "/verify",
+  },
+  // if you're logged in and verified, don't show the verify page
+  {
+    route: "/verify",
+    valueToCheck: "isVerified",
+    valueCheck: (value: any) => !!value,
+    redirectTo: "/armies",
+  },
   // logged in, don't allow signup
   {
     route: "/signup",

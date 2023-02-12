@@ -13,7 +13,7 @@ export const LoginForm = () => {
   const { account } = useApi();
   const { error } = useLog();
   const logUserIn = useAccountStore((state) => state.login);
-  const [email, setEmail] = useState(IS_DEV ? "miko2@mikosramek.ca" : "");
+  const [email, setEmail] = useState(IS_DEV ? "miko@mikosramek.ca" : "");
   const [password, setPassword] = useState(IS_DEV ? "password" : "");
 
   const handleSubmit = useCallback(

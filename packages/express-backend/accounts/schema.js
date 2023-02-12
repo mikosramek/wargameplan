@@ -14,6 +14,8 @@ const accountSchema = Schema({
   password: { type: String, required: true },
   validSessions: { type: Array },
   approved: { type: Boolean, default: false },
+  verificationId: { type: String, default: null },
+  verificationDateCreated: { type: Date, default: null },
 });
 
 accountSchema.plugin(beautifyUnique);

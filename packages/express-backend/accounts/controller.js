@@ -1,7 +1,9 @@
+const { v4: uuidv4 } = require("uuid");
 const Account = require("./schema");
 const { compareHash } = require("../utils/hash");
 const Session = require("../sessions/schema");
 const SessionController = require("../sessions/controller");
+const { sendVerificationEmail } = require("../utils/email/sendgrid");
 
 class AccountController {
   create(account, callback) {
@@ -67,7 +69,6 @@ class AccountController {
       });
     });
   }
-  // TODO: update
   getOne({ email, password }, callback) {
     Account.findOne({ email }).exec((err, account) => {
       if (err) return callback(err);
@@ -96,6 +97,69 @@ class AccountController {
           });
         })
         .catch((error) => callback(error));
+    });
+  }
+  verifyAccountApproval({ accountId }, callback) {
+    Account.findById(accountId).exec((err, account) => {
+      if (err) return callback(err);
+      if (!account || !account.approved) {
+        return callback(new Error("Account not verified"));
+      }
+      callback();
+    });
+  }
+  sendVerificationEmail({ accountId }, callback) {
+    Account.findById(accountId).exec((err, account) => {
+      if (err) return callback(err);
+      if (!account) return callback(new Error("No account found"));
+
+      const { approved, email } = account;
+
+      if (approved) return callback(new Error("Account already verified"));
+
+      // create new code on account object
+      account.verificationId = uuidv4();
+      account.verificationDateCreated = new Date();
+
+      account.save((err) => {
+        if (err) return callback(err);
+        // send email to user's email
+        sendVerificationEmail(
+          { toEmail: email, code: account.verificationId },
+          (err) => {
+            if (err) {
+              console.error(err);
+              return callback(err);
+            }
+            callback();
+          }
+        );
+      });
+    });
+  }
+  verifyAccountViaCode({ accountId, code }, callback) {
+    Account.findById(accountId).exec((err, account) => {
+      if (err) return callback(err);
+      if (!account) return callback(new Error("No account found"));
+
+      const { verificationId, verificationDateCreated } = account;
+
+      if (!verificationId)
+        return callback(new Error("No verification id found on account"));
+      const now = new Date();
+      const expiry = new Date(verificationDateCreated);
+      expiry.setTime(expiry.getTime() + 600000);
+      if (now > expiry) return callback(new Error("Verification code expired"));
+
+      if (code === verificationId) {
+        account.approved = true;
+        account.save((err) => {
+          if (err) return callback(err);
+          callback();
+        });
+      } else {
+        return callback(new Error("Verifcation code invalid"));
+      }
     });
   }
 }
