@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const config = require("../config.global.json");
+const GlobalConfig = require("../controller/global");
 
-router.get("/", (req, res) => {
-  res.status(200).send(config);
+router.get("/", (_req, res) => {
+  res.status(200).send(GlobalConfig.getConfig());
 });
 
 module.exports = router;
