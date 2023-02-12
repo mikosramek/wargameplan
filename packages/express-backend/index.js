@@ -41,6 +41,17 @@ app.use(
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get(
+  ".well-known/acme-challenge/hhWcEbPkNp0OYHAyxZUu3Bsc-3BbbPnHhG_uMPcgad4",
+  (req, res) => {
+    res
+      .status(200)
+      .send(
+        "hhWcEbPkNp0OYHAyxZUu3Bsc-3BbbPnHhG_uMPcgad4.L8hOzbQBwnMUT6BqD8rvjfuRPc5j9c09WovBAG4KW5A"
+      );
+  }
+);
+
 app.use("/api/v1/accounts", require("./accounts/routes"));
 app.use("/api/v1/features", require("./features/routes/global"));
 app.use(require("./sessions/middleware"));
