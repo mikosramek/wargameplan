@@ -20,9 +20,6 @@ const ca = fs.readFileSync(
   "utf8"
 );
 
-// /etc/letsencrypt/live/api.wargameplanner.com/fullchain.pem
-// /etc/letsencrypt/live/api.wargameplanner.com/privkey.pem
-
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -52,31 +49,19 @@ const app = express();
 
 const whitelist = [FRONT_END_URL, DEV_FRONT_END_URL];
 app.use(
-  cors()
-  //   {
-  //   origin: (origin, callback) => {
-  //     if (whitelist.indexOf(origin) !== -1) {
-  //       callback(null, true);
-  //     } else {
-  //       callback(new Error("Not allowed by CORS"));
-  //     }
-  //   },
-  // }
+  cors({
+    origin: (origin, callback) => {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
 );
 
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// app.get(
-//   "/.well-known/acme-challenge/4BH_FsJIlT_4ZnJp5YNehlkUdzYJ7LUZAoIkd_JKTPI",
-//   (req, res) => {
-//     res
-//       .status(200)
-//       .send(
-//         "4BH_FsJIlT_4ZnJp5YNehlkUdzYJ7LUZAoIkd_JKTPI.iD-pIIdGxl50WjXWvKKZUW_LzEzynXY4HjcjIVOTbB4"
-//       );
-//   }
-// );
 
 app.use("/api/v1/accounts", require("./accounts/routes"));
 app.use("/api/v1/features", require("./features/routes/global"));
@@ -86,10 +71,7 @@ app.use("/api/v1/armies", require("./armies/routes"));
 app.use("/api/v1/steps", require("./steps/routes"));
 app.use("/api/v1/rules", require("./steps/rulesRoutes"));
 
-// app.listen(1337);
-
 const httpsServer = https.createServer(credentials, app);
-
 httpsServer.listen(1337, () => {
   console.log("HTTPS Server running on port 1337");
 });
