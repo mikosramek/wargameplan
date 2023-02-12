@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { orderSort } from "utils/general";
 import { useAccountStore } from "store/account";
 import { useArmiesStore } from "store/armies";
@@ -6,8 +6,17 @@ import { Direction, useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
 import { nameSort } from "utils/general";
 
-const useArmies = () => {
-  const { getters, deleters, posters, patchers } = useApi();
+const useArmies = (fetchArmies: boolean = false) => {
+  const {
+    getArmies,
+    getArmySteps,
+    deleteRule: deleteRuleRequest,
+    reorderRule,
+    deleteStep: deleteStepRequest,
+    deleteArmy: deleteArmyRequest,
+    postNewArmy,
+    reorderStep,
+  } = useApi();
   const { log, error } = useLog();
   const setArmies = useArmiesStore((state) => state.setArmies);
   const addArmy = useArmiesStore((state) => state.addArmy);
@@ -31,114 +40,146 @@ const useArmies = () => {
   const armiesFetched = useArmiesStore((state) => state.armiesFetched);
   const isLoggedIn = useAccountStore((state) => state.isLoggedIn);
 
-  useEffect(() => {
-    if (isLoggedIn && !armiesFetched) {
-      handleArmiesFetch();
-    }
-  }, [isLoggedIn]);
-
-  const handleArmiesFetch = async () => {
-    log("FETCHING ARMIES");
+  const [fetchingArmies, setFetchingArmies] = useState(false);
+  const handleArmiesFetch = useCallback(async () => {
+    if (fetchingArmies) return;
+    log("FETCHING ARMIES", { fetchingArmies });
     try {
-      const armies = await getters.getArmies();
+      setFetchingArmies(true);
+      const armies = await getArmies();
       if (!(armies instanceof Error)) {
         setArmies(armies);
       }
     } catch (e) {
       error(e);
+    } finally {
+      setFetchingArmies(false);
     }
-  };
+  }, [fetchingArmies, error, getArmies, log, setArmies]);
 
-  const handleArmyFetch = async (id: string) => {
-    log("FETCHING SINGULAR ARMY", id);
-    try {
-      const steps = await getters.getArmySteps(id);
-      if (steps && !(steps instanceof Error)) {
-        log(steps);
-        const stepMap = steps.sort(orderSort).reduce((total, current) => {
-          return {
-            ...total,
-            [current.id]: current,
-          };
-        }, {});
-        updateArmySteps(id, stepMap);
-      }
-    } catch (e) {
-      error(e);
+  useEffect(() => {
+    if (!fetchArmies) return;
+    if (isLoggedIn && !armiesFetched) {
+      handleArmiesFetch();
     }
-  };
+  }, [fetchArmies, armiesFetched, handleArmiesFetch, isLoggedIn]);
 
-  const deleteRule = async (id: string) => {
-    log("DELETING RULE", id);
-    try {
-      const response = await deleters.deleteRule(id);
-      if (response && !(response instanceof Error)) {
-        updateCurrentArmyStepRule(response.stepId, response.rules);
+  const [fetchingArmy, setFetchingArmy] = useState(false);
+  const handleArmyFetch = useCallback(
+    async (id: string) => {
+      if (fetchingArmy) return;
+      log("FETCHING SINGULAR ARMY", id, { fetchingArmy });
+      try {
+        setFetchingArmy(true);
+        const steps = await getArmySteps(id);
+        if (steps && !(steps instanceof Error)) {
+          log(steps);
+          const stepMap = steps.sort(orderSort).reduce((total, current) => {
+            return {
+              ...total,
+              [current.id]: current,
+            };
+          }, {});
+          updateArmySteps(id, stepMap);
+        }
+      } catch (e) {
+        error(e);
+      } finally {
+        setFetchingArmy(false);
       }
-    } catch (e) {
-      error(e);
-    }
-  };
+    },
+    [error, fetchingArmy, getArmySteps, log, updateArmySteps]
+  );
 
-  const moveRule = async (id: string, direction: Direction) => {
-    log("MOVING RULE", id, direction);
-    try {
-      const response = await patchers.reorderRule(id, direction);
-      if (response && !(response instanceof Error)) {
-        updateCurrentArmyStepRule(response.stepId, response.rules);
+  const deleteRule = useCallback(
+    async (id: string) => {
+      log("DELETING RULE", id);
+      try {
+        const response = await deleteRuleRequest(id);
+        if (response && !(response instanceof Error)) {
+          updateCurrentArmyStepRule(response.stepId, response.rules);
+        }
+      } catch (e) {
+        error(e);
       }
-    } catch (e) {
-      error(e);
-    }
-  };
+    },
+    [deleteRuleRequest, error, log, updateCurrentArmyStepRule]
+  );
 
-  const deleteStep = async (id: string) => {
-    log("DELETING CURRENT STEP");
-    try {
-      const response = await deleters.deleteStep(id);
-      if (response && !(response instanceof Error)) {
-        removeCurrentArmyStep(response.stepIdRemoved);
+  const moveRule = useCallback(
+    async (id: string, direction: Direction) => {
+      log("MOVING RULE", id, direction);
+      try {
+        const response = await reorderRule(id, direction);
+        if (response && !(response instanceof Error)) {
+          updateCurrentArmyStepRule(response.stepId, response.rules);
+        }
+      } catch (e) {
+        error(e);
       }
-    } catch (e) {
-      error(e);
-    }
-  };
+    },
+    [error, log, reorderRule, updateCurrentArmyStepRule]
+  );
 
-  const moveStep = async (id: string, direction: Direction) => {
-    log("MOVING STEP", id, direction);
-    try {
-      const response = await patchers.reorderStep(id, direction);
-      if (response && !(response instanceof Error)) {
-        updateArmyStepOrder(response);
+  const deleteStep = useCallback(
+    async (id: string) => {
+      log("DELETING CURRENT STEP");
+      try {
+        const response = await deleteStepRequest(id);
+        if (response && !(response instanceof Error)) {
+          removeCurrentArmyStep(response.stepIdRemoved);
+        }
+      } catch (e) {
+        error(e);
       }
-    } catch (e) {
-      error(e);
-    }
-  };
+    },
+    [deleteStepRequest, error, log, removeCurrentArmyStep]
+  );
 
-  const createArmy = async (armyName: string) => {
-    log("CREATING ARMY");
-    try {
-      const response = await posters.postNewArmy(armyName);
-      if (response && !(response instanceof Error)) {
-        addArmy(response);
+  const moveStep = useCallback(
+    async (id: string, direction: Direction) => {
+      log("MOVING STEP", id, direction);
+      try {
+        const response = await reorderStep(id, direction);
+        if (response && !(response instanceof Error)) {
+          updateArmyStepOrder(response);
+        }
+      } catch (e) {
+        error(e);
       }
-    } catch (e) {
-      error(e);
-    }
-  };
+    },
+    [error, log, reorderStep, updateArmyStepOrder]
+  );
 
-  const deleteArmy = async (armyId: string) => {
-    log("REMOVING ARMY", armyId);
-    try {
-      const response = await deleters.deleteArmy(armyId);
-      if (response && !(response instanceof Error)) {
-        removeArmy(response.armyId);
+  const createArmy = useCallback(
+    async (armyName: string) => {
+      log("CREATING ARMY");
+      try {
+        const response = await postNewArmy(armyName);
+        if (response && !(response instanceof Error)) {
+          addArmy(response);
+        }
+      } catch (e) {
+        error(e);
       }
-    } catch (e) {
-      error(e);
-    }
-  };
+    },
+    [addArmy, error, log, postNewArmy]
+  );
+
+  const deleteArmy = useCallback(
+    async (armyId: string) => {
+      log("REMOVING ARMY", armyId);
+      try {
+        const response = await deleteArmyRequest(armyId);
+        if (response && !(response instanceof Error)) {
+          removeArmy(response.armyId);
+        }
+      } catch (e) {
+        error(e);
+      }
+    },
+    [deleteArmyRequest, error, log, removeArmy]
+  );
 
   return {
     armies,

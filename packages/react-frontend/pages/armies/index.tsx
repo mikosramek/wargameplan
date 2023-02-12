@@ -7,7 +7,7 @@ import { useGeneralStore } from "store/general";
 import * as Styled from "styles/armies.styled";
 
 const Armies = () => {
-  const { alphabeticalArmies: armies, armiesFetched } = useArmies();
+  const { alphabeticalArmies: armies, armiesFetched } = useArmies(true);
   const openModal = useGeneralStore((state) => state.openModal);
   useHeading({ heading: "Your Armies" });
 

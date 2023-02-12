@@ -9,7 +9,8 @@ import StepsPage from "armies/Steps";
 const ArmyPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { armiesFetched, handleArmyFetch } = useArmies();
+  const { handleArmyFetch } = useArmies(true);
+  const armiesFetched = useArmiesStore((state) => state.armiesFetched);
   const setCurrentArmyId = useArmiesStore((state) => state.setCurrentArmyId);
 
   const getArmy = useArmiesStore((state) => state.getArmy);
@@ -20,10 +21,16 @@ const ArmyPage = () => {
   useHeading({ heading: armyFetched ? army.name : "-" });
 
   useEffect(() => {
-    if (!armiesFetched) return;
+    console.log("use effect");
+    if (!armiesFetched || armyFetched) {
+      console.log("early return");
+      return;
+    }
     if (id && typeof id === "string") {
+      console.log("setting current army id");
       setCurrentArmyId(id);
       if (!armyFetched) {
+        console.log("fetching army");
         handleArmyFetch(id);
       }
     }

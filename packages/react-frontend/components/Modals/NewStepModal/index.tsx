@@ -17,7 +17,7 @@ const baseInputs = {
 } as BaseInputs;
 
 export const NewStepModal = () => {
-  const { posters } = useApi();
+  const { postNewStep } = useApi();
   const { error } = useLog();
   const closeModal = useGeneralStore((state) => state.closeModal);
   const updateCurrentArmyStep = useArmiesStore(
@@ -36,8 +36,7 @@ export const NewStepModal = () => {
       if (!isFormValid) return;
 
       setLoading(true);
-      posters
-        .postNewStep({ stepName: form.stepName.val })
+      postNewStep({ stepName: form.stepName.val })
         .then((updatedSteps) => {
           if (updatedSteps && !(updatedSteps instanceof Error)) {
             closeModal();
@@ -49,7 +48,14 @@ export const NewStepModal = () => {
           setLoading(false);
         });
     },
-    [closeModal, error, inputs, posters, updateCurrentArmyStep, validateInputs]
+    [
+      closeModal,
+      error,
+      inputs,
+      postNewStep,
+      updateCurrentArmyStep,
+      validateInputs,
+    ]
   );
 
   return (
