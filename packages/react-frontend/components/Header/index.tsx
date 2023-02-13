@@ -29,7 +29,7 @@ const Header = () => {
             <>
               <Link href="/signup" passHref legacyBehavior>
                 <Styled.StyledLink
-                  aria-current={pathname === "/signup" ? "page" : ""}
+                  aria-current={pathname === "/signup" ? "page" : undefined}
                   isActive={pathname === "/signup"}
                 >
                   Sign up
@@ -37,7 +37,7 @@ const Header = () => {
               </Link>
               <Link href="/" passHref legacyBehavior>
                 <Styled.StyledLink
-                  aria-current={pathname === "/" ? "page" : ""}
+                  aria-current={pathname === "/" ? "page" : undefined}
                   isActive={pathname === "/"}
                 >
                   Log in

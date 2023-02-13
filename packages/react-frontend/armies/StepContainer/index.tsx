@@ -23,7 +23,7 @@ const StepContainer = ({ step, stepCount }: Props) => {
   const handleDelete = useCallback(() => {
     const confirmation = confirm(`Delete the "${step.name}" step?`);
     if (confirmation) deleteStep(step.id);
-  }, [step]);
+  }, [deleteStep, step.id, step.name]);
 
   const [isLoading, setLoading] = useState(false);
   const handleReorder = useCallback(
@@ -38,7 +38,7 @@ const StepContainer = ({ step, stepCount }: Props) => {
         setLoading(false);
       }
     },
-    [step, isLoading, canReorder]
+    [isLoading, canReorder, moveStep, step.id, error]
   );
 
   return (

@@ -44,6 +44,9 @@ export const CloseButton = styled.button`
   font-size: 36px;
   background-color: var(--white);
   color: var(--impact);
+  &:focus {
+    border: 2px solid var(--impact);
+  }
 `;
 
 export const Heading = styled.h2`
