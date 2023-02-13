@@ -9,8 +9,7 @@ const https = require("https");
 
 const IS_DEV = process.env.NODE_ENV === "dev";
 
-const { DB_NAME, DB_USER, DB_PASSWORD, FRONT_END_URL, DEV_FRONT_END_URL } =
-  process.env;
+const { DB_NAME, DB_USER, DB_PASSWORD, FRONT_END_URL } = process.env;
 
 const dbConnection = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@prod.8tbszom.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 
@@ -30,7 +29,15 @@ db.on("open", () => {
 
 const app = express();
 
-const whitelist = [FRONT_END_URL, DEV_FRONT_END_URL];
+// https://api.wargameplanner.com:1337/api/v1/webhooks/release
+// https://wgp-be.ngrok.io/api/v1/webhooks/release
+
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/api/v1/webhooks", require("./webhooks/routes"));
+
+const whitelist = [FRONT_END_URL];
 app.use(
   cors(
     IS_DEV
@@ -46,9 +53,6 @@ app.use(
         }
   )
 );
-
-app.use(bodyParser.json({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/v1/accounts", require("./accounts/routes"));
 app.use("/api/v1/features", require("./features/routes/global"));
