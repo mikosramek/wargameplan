@@ -29,7 +29,7 @@ export const ListButton = styled(MainButton)`
 `;
 
 export const TurnButton = styled(ListButton)`
-  border: 1px solid var(--black);
+  border: 1px solid var(--impact);
   width: 75px;
   height: 75px;
   display: flex;

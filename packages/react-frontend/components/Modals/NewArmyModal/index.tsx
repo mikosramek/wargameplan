@@ -5,6 +5,7 @@ import { useInput, BaseInputs } from "hooks/form/useInput";
 import * as Styled from "./NewArmyModal.styled";
 import { useLog } from "hooks/useLog";
 import useArmies from "hooks/useArmies";
+import { ModalButton } from "components/Modals/ModalButton";
 
 const baseInputs = {
   armyName: {
@@ -59,7 +60,13 @@ export const NewArmyModal = () => {
           />
         );
       })}
-      <Styled.Button disabled={isLoading}>Submit</Styled.Button>
+      <ModalButton copy="Submit" disabled={isLoading} />
+      <ModalButton
+        onClick={closeModal}
+        copy="Cancel"
+        type="reset"
+        disabled={isLoading}
+      />
     </Styled.Form>
   );
 };

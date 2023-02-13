@@ -28,12 +28,18 @@ const Header = () => {
           {!isLoggedIn && (
             <>
               <Link href="/signup" passHref legacyBehavior>
-                <Styled.StyledLink isActive={pathname === "/signup"}>
+                <Styled.StyledLink
+                  aria-current={pathname === "/signup" ? "page" : undefined}
+                  isActive={pathname === "/signup"}
+                >
                   Sign up
                 </Styled.StyledLink>
               </Link>
               <Link href="/" passHref legacyBehavior>
-                <Styled.StyledLink isActive={pathname === "/"}>
+                <Styled.StyledLink
+                  aria-current={pathname === "/" ? "page" : undefined}
+                  isActive={pathname === "/"}
+                >
                   Log in
                 </Styled.StyledLink>
               </Link>

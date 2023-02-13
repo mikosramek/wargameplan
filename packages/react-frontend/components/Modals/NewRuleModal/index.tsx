@@ -5,6 +5,7 @@ import { useInput, BaseInputs } from "hooks/form/useInput";
 import { useApi } from "hooks/useApi";
 import { useLog } from "hooks/useLog";
 import { Input } from "components/Form/Input";
+import { ModalButton } from "components/Modals/ModalButton";
 import * as Styled from "./NewRuleModal.styled";
 
 const baseInputs = {
@@ -83,9 +84,13 @@ export const NewRuleModal = () => {
           );
         }
       )}
-      <Styled.Button disabled={isLoading} type="submit">
-        Submit
-      </Styled.Button>
+      <ModalButton copy="Submit" disabled={isLoading} />
+      <ModalButton
+        onClick={closeModal}
+        copy="Cancel"
+        type="reset"
+        disabled={isLoading}
+      />
     </Styled.Form>
   );
 };

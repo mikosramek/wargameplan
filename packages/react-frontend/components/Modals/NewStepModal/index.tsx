@@ -6,6 +6,7 @@ import { Input } from "components/Form/Input";
 import { useGeneralStore } from "store/general";
 import { useArmiesStore } from "store/armies";
 import * as Styled from "./NewStepModal.styled";
+import { ModalButton } from "components/Modals/ModalButton";
 
 const baseInputs = {
   stepName: {
@@ -72,7 +73,13 @@ export const NewStepModal = () => {
           />
         );
       })}
-      <Styled.Button disabled={isLoading}>Submit</Styled.Button>
+      <ModalButton copy="Submit" disabled={isLoading} />
+      <ModalButton
+        onClick={closeModal}
+        copy="Cancel"
+        type="reset"
+        disabled={isLoading}
+      />
     </Styled.Form>
   );
 };

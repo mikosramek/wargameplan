@@ -38,7 +38,7 @@ const StepsPage = ({ steps }: Props) => {
         decreaseCounter();
       }
     }
-  }, [counter, parsedSteps]);
+  }, [counter, decreaseCounter, log, parsedSteps, setCurrentStepId]);
 
   return (
     <>

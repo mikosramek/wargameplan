@@ -1,11 +1,12 @@
 import * as Styled from "./MainButton.styled";
 
-type Props = {
+export type Props = {
   onClick?: () => void;
   copy: string;
   className?: string;
   disabled?: boolean;
   ariaLabel?: string;
+  type?: "submit" | "reset" | "button";
 };
 
 export const MainButton = ({
@@ -14,10 +15,11 @@ export const MainButton = ({
   className = "",
   disabled = false,
   ariaLabel = copy,
+  type = "submit",
 }: Props) => {
   return (
     <Styled.Button
-      type="submit"
+      type={type}
       className={className}
       onClick={onClick}
       disabled={disabled}

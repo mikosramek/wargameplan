@@ -11,4 +11,8 @@ export const Button = styled.button`
   &:disabled {
     color: var(--impact-dark);
   }
+  &:focus {
+    color: var(--white);
+    background: var(--impact);
+  }
 `;

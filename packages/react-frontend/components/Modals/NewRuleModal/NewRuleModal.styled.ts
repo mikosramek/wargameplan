@@ -25,6 +25,4 @@ export const TextArea = styled.textarea`
   max-height: 50vh;
 `;
 
-export const Button = styled.button`
-  display: block;
-`;
+export const Button = styled.button``;

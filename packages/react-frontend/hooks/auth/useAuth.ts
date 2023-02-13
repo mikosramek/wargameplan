@@ -9,7 +9,7 @@ import { useApi } from "hooks/useApi";
 export const useAuth = () => {
   const accountStore = useAccountStore((state) => state);
   const currentRoute = typeof window !== "undefined" ? Router.route : null;
-  const { log } = useLog();
+  const { log, error } = useLog();
   const { sessionLogin } = useApi();
 
   const [checkedForSession, setSessionCheck] = useState(false);
@@ -18,18 +18,22 @@ export const useAuth = () => {
     const sessionId = getStoredSession();
     log("stored session: ", sessionId);
     if (sessionId) {
-      const response = await sessionLogin({ sessionId });
-      if (!(response instanceof Error)) {
-        const { account, expired } = response;
-        if (!expired) {
-          accountStore.login({
-            id: account.id,
-            session: account.sessionId,
-            isVerified: account.approved,
-          });
-        } else {
-          clearStoredSession();
+      try {
+        const response = await sessionLogin({ sessionId });
+        if (!(response instanceof Error)) {
+          const { account, expired } = response;
+          if (!expired) {
+            accountStore.login({
+              id: account.id,
+              session: account.sessionId,
+              isVerified: account.approved,
+            });
+          } else {
+            clearStoredSession();
+          }
         }
+      } catch (err) {
+        error(err);
       }
     }
     setSessionCheck(true);
