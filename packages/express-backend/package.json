@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --recursive --exit",
     "dev": "NODE_ENV=dev nodemon index.js",
-    "start": "NODE_ENV=prod node index.js"
+    "dev-pm2": "pm2 start ecosystem.config.js",
+    "start": "pm2 start ecosystem.config.js --env production"
   },
   "keywords": [],
   "author": "",
