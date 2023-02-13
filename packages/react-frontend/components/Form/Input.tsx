@@ -11,6 +11,7 @@ type Props = {
   autocomplete?: string;
   required?: boolean;
   checked?: boolean;
+  ariaLabel?: string;
 };
 
 export const Input = ({
@@ -23,6 +24,7 @@ export const Input = ({
   autocomplete,
   required = false,
   checked = false,
+  ariaLabel,
 }: Props) => {
   return (
     <>
@@ -54,6 +56,7 @@ export const Input = ({
           autoComplete={autocomplete}
           required={required}
           checked={checked}
+          aria-label={ariaLabel}
         />
       )}
     </>

@@ -8,6 +8,7 @@ import { useApi } from "hooks/useApi";
 import { useAccountStore } from "store/account";
 import { useLog } from "hooks/useLog";
 import { storeSession } from "utils/general";
+import { useError } from "hooks/form/useError";
 
 export const SignupForm = () => {
   const { signUp } = useApi();
@@ -18,14 +19,12 @@ export const SignupForm = () => {
   );
   const [password, setPassword] = useState(IS_DEV ? "password" : "");
   const [showPassword, toggleShowPassword] = useReducer((val) => !val, false);
-
-  const [apiError, setApiError] = useState("");
-  const errorRef = useRef<HTMLInputElement>(null);
+  const { ErrorText, setError } = useError();
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      setApiError("");
+      setError("");
       signUp({ email, password })
         .then((response) => {
           if (response && !(response instanceof Error)) {
@@ -41,11 +40,10 @@ export const SignupForm = () => {
         })
         .catch((e) => {
           error(e);
-          setApiError(e.response.data);
-          if (errorRef.current) errorRef.current.focus();
+          setError(e.response.data);
         });
     },
-    [email, error, logUserIn, password, signUp]
+    [email, error, logUserIn, password, signUp, setError]
   );
 
   return (
@@ -76,11 +74,13 @@ export const SignupForm = () => {
           label="Show Password"
           checked={showPassword}
           onChange={toggleShowPassword}
-          aria-label="Show password as plain text. Warning: this will display your password on the screen."
+          ariaLabel={`Show password as plain text. Warning: this ${
+            showPassword ? "is displaying" : "will display"
+          }  your password as plain text.`}
         />
       </Styled.ToggleWrapper>
       <MainButton copy="Sign up" />
-      <Styled.Error ref={errorRef}>{apiError}</Styled.Error>
+      {ErrorText}
     </Styled.Form>
   );
 };
