@@ -1,3 +1,5 @@
+name: Release on Tag
+
 on:
   push:
     # Pattern matched against refs/tags
