@@ -20,7 +20,9 @@ router.post("/release", async (req, res) => {
     sentResponse = true;
 
     console.log("RESTARTING PM2 SERVICE");
-    await execSync(`pm2 restart wgp-api ${IS_DEV ? "" : "--env production"}`);
+    await execSync(
+      `pm2 restart ./ecosystem.config.js ${IS_DEV ? "" : "--env production"}`
+    );
   } catch (err) {
     console.error(err);
     if (!sentResponse) {
