@@ -4,27 +4,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const http = require("http");
 const https = require("https");
 
-// Certificate
-const privateKey = fs.readFileSync(
-  "/etc/letsencrypt/live/api.wargameplanner.com/privkey.pem",
-  "utf8"
-);
-const certificate = fs.readFileSync(
-  "/etc/letsencrypt/live/api.wargameplanner.com/cert.pem",
-  "utf8"
-);
-const ca = fs.readFileSync(
-  "/etc/letsencrypt/live/api.wargameplanner.com/chain.pem",
-  "utf8"
-);
-
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  ca: ca,
-};
+const IS_DEV = process.env.NODE_ENV === "dev";
 
 const { DB_NAME, DB_USER, DB_PASSWORD, FRONT_END_URL, DEV_FRONT_END_URL } =
   process.env;
@@ -49,15 +32,19 @@ const app = express();
 
 const whitelist = [FRONT_END_URL, DEV_FRONT_END_URL];
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
+  cors(
+    IS_DEV
+      ? {}
+      : {
+          origin: (origin, callback) => {
+            if (whitelist.indexOf(origin) !== -1) {
+              callback(null, true);
+            } else {
+              callback(new Error("Not allowed by CORS"));
+            }
+          },
+        }
+  )
 );
 
 app.use(bodyParser.json({ extended: true }));
@@ -71,7 +58,34 @@ app.use("/api/v1/armies", require("./armies/routes"));
 app.use("/api/v1/steps", require("./steps/routes"));
 app.use("/api/v1/rules", require("./steps/rulesRoutes"));
 
-const httpsServer = https.createServer(credentials, app);
-httpsServer.listen(1337, () => {
-  console.log("HTTPS Server running on port 1337");
-});
+if (IS_DEV) {
+  const server = http.createServer(app);
+  server.listen(1337, () => {
+    console.log("HTTP Server running on port 1337");
+  });
+} else {
+  // Certificate
+  const privateKey = fs.readFileSync(
+    "/etc/letsencrypt/live/api.wargameplanner.com/privkey.pem",
+    "utf8"
+  );
+  const certificate = fs.readFileSync(
+    "/etc/letsencrypt/live/api.wargameplanner.com/cert.pem",
+    "utf8"
+  );
+  const ca = fs.readFileSync(
+    "/etc/letsencrypt/live/api.wargameplanner.com/chain.pem",
+    "utf8"
+  );
+
+  const credentials = {
+    key: privateKey,
+    cert: certificate,
+    ca: ca,
+  };
+
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(1337, () => {
+    console.log("HTTPS Server running on port 1337");
+  });
+}

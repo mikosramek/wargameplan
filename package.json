@@ -9,7 +9,8 @@
     "be-test": "lerna run --scope=wargameplan-express test",
     "fe-test": "lerna run --scope=react-frontend test",
     "test": "lerna run --parallel test",
-    "all": "lerna run --parallel start"
+    "dev": "lerna run --parallel dev",
+    "start": "lerna run --parallel start"
   },
   "keywords": [],
   "author": "mikosramek",

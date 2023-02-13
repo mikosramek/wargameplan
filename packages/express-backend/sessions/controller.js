@@ -19,7 +19,7 @@ class SessionController {
     Session.findOne({ _id: sessionId, accountId }).exec((err, session) => {
       if (err) return callback(err);
       if (!session) {
-        return callback(new Error("Authentication missing"));
+        return callback(new Error("Session not found"));
       }
       callback();
     });
